@@ -34,6 +34,13 @@ string Room::getExit(int index) {
 	return listOfExits[index];
 }
 
-void Room::setExits(vector<string> exitNames) {
+void Room::setExits(vector<string>& exitNames) {
 	listOfExits = exitNames;
+}
+
+void Room::addItems(list<Item*> itemsToAdd) {
+	for (list<Item*>::iterator it = itemsToAdd.begin(); it != itemsToAdd.end(); ++it) {
+		listOfItems.push_back(*it);
+	}
+	itemsToAdd.clear();
 }

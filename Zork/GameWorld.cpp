@@ -4,6 +4,7 @@
 #include "Item.h"
 #include <list>
 #include <iostream>
+
 using namespace std;
 
 GameWorld::GameWorld()
@@ -19,8 +20,10 @@ void GameWorld::initGameWorld() {
 
 	Item* rock = new Item("rock", "A simple rock", false, false, nullptr);
 	listOfItems.push_back(rock);
+	Item* box = new Item("box", "A small box, maybe there is something inside", false, false, rock);
+	listOfItems.push_back(box);
 	Room* main = new Room("mainRoom", "This is the main room there's nothing here save for yourself.", false);
-	main->listOfItems.push_back(rock);
+	main->addItems({ box });
 	listOfRooms.push_back(main);
 	player->actualRoom = main;
 }
@@ -35,12 +38,14 @@ void GameWorld::processInput(string input) {
 	if (!input.empty()) {
 		vector<string> parameters;
 		getParameters(input, &parameters);
-		for (int i = 0; i < (int) parameters.size(); ++i) cout << parameters[i] << endl;
 		if (parameters.size() >= 1) {
 			string command = parameters[0];
 			if (command == "LOOK") {
 				if (parameters.size()-1 > 1) printNumberArgumentsError(1, ((int)parameters.size()) - 1);
-				else LookAt(parameters[1]);
+				else {
+					if (parameters.size() == 1) LookAt("this room") ;
+					else LookAt(parameters[1]);
+				}
 			}
 			else if (command == "USE") {
 				if (parameters.size()-1 != 3) printNumberArgumentsError(3, ((int)parameters.size()) - 1);
@@ -106,9 +111,17 @@ void GameWorld::lookTarget(string name) {
 		cout << player->entityDescription << endl;
 		found = true;
 	}
+	else if (name == "this room") {
+		cout << player->actualRoom->entityDescription << endl;
+		found = true;
+	}
 	else if (!found && name == player->actualRoom->entityName) {
 		cout << player->actualRoom->entityDescription << endl;
 		found = true;
+		if (!(*roomItems).empty()) {
+			cout << "You see several things in the room:" << endl;
+			for (list<Item*>::iterator it = (*roomItems).begin(); it != (*roomItems).end(); ++it) cout << "There's " <<(*it)->entityDescription << endl;				
+		}
 	}
 	else {
 		if (!(*roomItems).empty()) {
@@ -154,47 +167,74 @@ void GameWorld::UseItem(std::string target1, std::string target2) {
 
 void GameWorld::Open(std::string target) {
 	cout << "Opening: " + target << endl;
-	bool opened = false;
-	for (int i = 0; i < (int)listOfItems.size() && !opened; ++i) {
-		Item* itemOfList = listOfItems[i];
+	bool opened, found, inInventory;
+	opened = found = inInventory = false;
+	Item* itemOfList = nullptr;
+	for (list<Item*>::iterator it = player->inventory.begin(); it != player->inventory.end() && !found; ++it) {
+		itemOfList = *it;
 		if (itemOfList->entityName == target) {
+			found = true;
 			if (itemOfList->itemContained != nullptr) {
 				opened = true;
-				cout << "You open " << target << " and you find " << itemOfList->itemContained->entityName << " inside!" << endl;
-				cout << "You add " << itemOfList->itemContained->entityName << " to your inventory, and discard "<< target <<" ."<< endl;
-				player->inventory.push_back(itemOfList->itemContained);
+				inInventory = true;
 			}
 		}
+	}	
+	if (!found) {		
+		for (list<Item*>::iterator it = player->actualRoom->listOfItems.begin(); it != player->actualRoom->listOfItems.end() && !found; ++it) {
+			itemOfList = *it;
+			if (itemOfList->entityName == target) {
+				found = true;
+				if (itemOfList->itemContained != nullptr) {
+					opened = true;	
+				}
+			}
+		}
+		if (!found) cout << "The item " << target << " is not here to be picked up!" << endl;
 	}
-	if (!opened) cout << " The item cannot be opened." << endl;
+	else {
+		if (!opened) cout << " The item cannot be opened." << endl;
+		else {
+			player->inventory.push_back(itemOfList->itemContained);
+			cout << "You open " << target << " and you find " << itemOfList->itemContained->entityName << " inside!" << endl;
+			cout << "You add " << itemOfList->itemContained->entityName << " to your inventory, and discard " << target << " ." << endl;
+			if (inInventory) player->inventory.remove(itemOfList);
+			else player->actualRoom->listOfItems.remove(itemOfList);
+		}
+	}
 }
 
 void GameWorld::Take(std::string target) {
 	cout << "Picking up: " + target << endl;
 	bool found = false;
+	Item* roomItem = nullptr;
 	for (list<Item*>::iterator it = player->actualRoom->listOfItems.begin(); it != player->actualRoom->listOfItems.end() && !found; ++it) {
 		if ((*it)->entityName == target) {
 			found = true;
 			player->inventory.push_back((*it));
+			roomItem = *it;
 			cout << "You add " << target << " to your inventory." << endl;
 		}
 	}
 	if (!found) cout << "The item " << target << " is not here to be picked up!" << endl;
+	else  player->actualRoom->listOfItems.remove(roomItem);
 }
 
 void GameWorld::Drop(std::string target) {
 	cout << "Dropping: " + target << endl;
 	if (!player->inventory.empty()) {
 		bool found = false;
+		Item* iter = nullptr;
 		for (list<Item*>::iterator it = player->inventory.begin(); it != player->inventory.end() && !found; ++it) {
 			if ((*it)->entityName == target) {
 				found = true;
 				player->actualRoom->listOfItems.push_back((*it));
-				player->inventory.remove((*it));
+				iter = *it;
 				cout << "You drop " << target << " from your inventory into the room." << endl;
 			}
 		}
 		if (!found) cout << "The item " << target << " is not in your inventory!" << endl;
+		else player->inventory.remove(iter);
 	}
 	else cout << "Your inventory is empty." << endl;
 }

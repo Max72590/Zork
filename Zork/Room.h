@@ -15,10 +15,9 @@ public:
 
 	void checkIfKeyOpensRoom(std::string name);
 	std::string getExit(int index);
-	void setExits(std::vector<std::string>exits);
-	void addItem(Entity* item);
+	void setExits(std::vector<std::string> &exits);
 	void takeItem(std::string itemName);
-
+	void addItems(std::list<Item*> itemsToAdd);
 
 public:
 	std::list<Item*> listOfItems;
