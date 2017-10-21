@@ -18,20 +18,78 @@ GameWorld::~GameWorld()
 
 void GameWorld::initGameWorld() {
 
-	Item* rock = new Item("rock", "A simple rock", false, false, nullptr);
-	listOfItems.push_back(rock);
-	Item* box = new Item("box", "A small box, maybe there is something inside", false, false, rock);
-	listOfItems.push_back(box);
-	Room* main = new Room("mainRoom", "This is the main room there's nothing here save for yourself.", false);
-	main->addItems({ box });
-	listOfRooms.push_back(main);
-	player->actualRoom = main;
+	Item* entranceKey = new Item("House key", "A small key.", true, nullptr, nullptr);
+	Item* entranceLock = new Item("Entrance Lock", "There's a lock, the door won't budge unless this lock is opened.", false, nullptr, entranceKey);
+	Item* waterKey = new Item("Water key", "A small blue key with a teardrop symbol", true, nullptr, nullptr);
+	Item* closedWindow = new Item("Closed window", "It's a window with its panels closed, it doesn't appear they're locked.",false, waterKey,nullptr);	
+	Item* openedWindow = new Item("Window", "It's a window with its panels open, there's a good view of the outside.", false, nullptr, nullptr);
+	Item* jug = new Item("Jug", "An empty water jug.", true, nullptr, nullptr);
+	Item* filledJug = new Item("Filled jug", "A water jug filled with water, as it should be.", true, nullptr, nullptr);
+	Item* lockedfaucet = new Item("Locked faucet", "It's a water faucet but there's a lock on it, you cannot get water from it in this state.", false, nullptr, waterKey);	
+	Item* faucet = new Item("Water faucet", "It's a water faucet, now you can get water from it! If you have something to hold the water with, of course.", false, filledJug, jug);
+	Item* fireplace = new Item("Fireplace", "A lit fireplace, it's warming the entire room... wait there's something on the back of the fireplace.",false, nullptr, filledJug);
+	Item* fireplaceOff = new Item("Extinct fireplace", "An unlit fireplace, it's warming the entire room no more.", false, nullptr, nullptr);
+	Item* room3Key = new Item("Blue key", "A blue colored key.", true, nullptr, nullptr);	
+	Item* room3Lock = new Item("Blue lock","A blue colored lock is keeping the door locked.",false, nullptr, room3Key);
+	Item* waxFigure = new Item("Wax figure", "A whole new wax candle. It has never been used", true, nullptr, nullptr);
+	Item* room5Key = new Item("Green key", "A green colored key.", true, nullptr, nullptr);
+	Item* room5Lock = new Item("Blue lock", "A blue colored lock is keeping the door locked.", false, nullptr, room5Key);	
+	Item* stove = new Item("Stove", "A fully functional stove", false, room5Key, waxFigure);
+	Item* bellStick = new Item("Bell stick", "A small stick, seems it can be used to play a bell", true, nullptr, nullptr);
+	Item* bellBox = new Item("Metal box","A small metalic box with a bell shape etched into it", true, bellStick, nullptr);
+	Item* bell = new Item();
+	Item* room8Lock = new Item();
+	Item* batteries = new Item();
+	Item* torch = new Item();
+	const Item* itemList[] = { entranceKey , waterKey, closedWindow, openedWindow, jug, filledJug, lockedfaucet, faucet, fireplace, fireplaceOff, room3Key, room3Lock, waxFigure, room5Key, room5Lock,
+	 stove, bellStick, bellBox, bell, batteries, torch, room8Lock };
+	addItems(itemList);
+	
+	Room* frontHouse = new Room("Front House", "You find yourself in front of a house, there's nothing here save for yourself and one exit at NORTH.", false);
+	Room* rightHouse = new Room("Right House", "You arrived to the west side of the house, there's only a path going NORTH and SOUTH.", false);
+	Room* leftHouse = new Room("Left House", "You arrived to the east side of the house, there's only a path going NORTH and SOUTH.", false);
+	Room* backHouse = new Room("Back House", "You're in the back of the house, there is an exit at the EAST and the WEST.", false);
+	Room* entrance = new Room("House Entrance", "You're in the entrance room, there is an exit at the EAST and the WEST and a trapdoor.", false);
+	Room* basement = new Room("House Basement", "You descended into the basement, there's nothing there save for an strange robed figure sitting in the back of the room.",true);
+	Room* Room2 = new Room("Room2", "You're in Room 2", false);
+	Room* Room3 = new Room("Room3", "You're in Room 3", true);
+	Room* Room4 = new Room("Room4", "You're in Room 4", false);
+	Room* Room5 = new Room("Room5", "You're in Room 5", true);
+	Room* Room6 = new Room("Room6", "You're in Room 6", false);
+	Room* Room7 = new Room("Room7", "You're in Room 7", false);
+	Room* Room8 = new Room("Room8", "You're in Room 8", true);
+	addRooms({frontHouse, rightHouse,leftHouse,backHouse,entrance,Room2,Room3,Room4, Room5, Room6, Room7, Room8, basement });
+
+	frontHouse->listOfItems.push_back(entranceLock);
+	backHouse->listOfItems.push_back(entranceKey);
+	entrance->listOfItems.push_back(jug);
+	Room2->listOfItems.push_back(fireplace);
+	Room2->listOfItems.push_back(closedWindow);
+	Room2->listOfItems.push_back(room3Lock);
+	Room3->listOfItems.push_back(waxFigure);
+	Room4->listOfItems.push_back(stove);
+	Room4->listOfItems.push_back(lockedfaucet);
+	Room4->listOfItems.push_back(room5Lock);
+	Room5->listOfItems.push_back(bellBox);
+	
+	replacements[fireplace->entityName] = fireplaceOff;
+	replacements[closedWindow->entityName] = openedWindow;
+	replacements[lockedfaucet->entityName] = faucet;
+
+	const string  listOfExits[12][6] = { { "House Entrance","","Right House","Left House","","" },
+	{ "Back House","Front House","","","","" }, { "Back House","Front House","","","","" },
+	{ "","","Right House","Left House","","" }, { "","Front House","Room4","Room2","","House Basement" },
+	{ "Room3","","House Entrance","","","" },{ "","Room2","","","","" },
+	{ "Room5","","","House Entrance","","" },{ "","Room4","","Room6","","" },{ "","","Room5","","Room7","" },
+	{ "","Room8","","","","Room6" },{ "Room7","","","","","" } };
+	addExitsToRooms(listOfExits);
+
+	player->actualRoom = frontHouse;
 }
 
 void GameWorld::setPlayer(Player *p) {
 	player = p;
 }
-
 
 void GameWorld::processInput(string input) {
 	cout << "Processing input: " << input << endl;
@@ -51,7 +109,7 @@ void GameWorld::processInput(string input) {
 				if (parameters.size()-1 != 3) printNumberArgumentsError(3, ((int)parameters.size()) - 1);
 				else UseItem(parameters[1], parameters[3]);
 			}
-			else if (command == "NORTH" || command == "SOUTH" || command == "EAST" || command == "WEST") {
+			else if (command == "NORTH" || command == "SOUTH" || command == "EAST" || command == "WEST" || command == "UP" || command == "DOWN") {
 				if (parameters.size()-1 != 0) printNumberArgumentsError(0, ((int)parameters.size()) - 1);
 				else MoveToDirection(parameters[0]);
 			}
@@ -83,10 +141,7 @@ void GameWorld::getParameters(string input, vector<string> *params) {
 			params->push_back(parameter);
 			parameter.clear();
 		}
-		else if (input[i] != ' ' ) {
-			parameter.push_back(input[i]);
-		}
-
+		else if (input[i] != ' ' ) parameter.push_back(input[i]);
 		else {
 			params->push_back(parameter);
 			parameter.clear();
@@ -97,15 +152,13 @@ void GameWorld::getParameters(string input, vector<string> *params) {
 
 Room* GameWorld::fetchRoomByName(string name) {
 	for (Room* it : listOfRooms) {
-		if ( it->entityName == name) {
-			return it;
-		}
+		if ( it->entityName == name) return it;
 	}
 	return nullptr;
 }
 
 void GameWorld::lookTarget(string name) {
-	list<Item*> *roomItems = &player->actualRoom->listOfItems;
+	list<const Item*> *roomItems = &player->actualRoom->listOfItems;
 	bool found = false;
 	if (name == "me" || name == "myself") {
 		cout << player->entityDescription << endl;
@@ -120,12 +173,12 @@ void GameWorld::lookTarget(string name) {
 		found = true;
 		if (!(*roomItems).empty()) {
 			cout << "You see several things in the room:" << endl;
-			for (list<Item*>::iterator it = (*roomItems).begin(); it != (*roomItems).end(); ++it) cout << "There's " <<(*it)->entityDescription << endl;				
+			for (list<const Item*>::iterator it = (*roomItems).begin(); it != (*roomItems).end(); ++it) cout << "There's " <<(*it)->entityDescription << endl;
 		}
 	}
 	else {
 		if (!(*roomItems).empty()) {
-			for (list<Item*>::iterator it = (*roomItems).begin(); it != (*roomItems).end() && !found; ++it) {
+			for (list<const Item*>::iterator it = (*roomItems).begin(); it != (*roomItems).end() && !found; ++it) {
 				if ((*it)->entityName == name) {
 					cout << (*it)->entityDescription << endl;
 					found = true;
@@ -143,16 +196,23 @@ void GameWorld::printNumberArgumentsError(int argumentsNeeded, int argumentsProv
 void GameWorld::MoveToDirection(std::string direction) {
 	int roomIndex;
 	if (direction == "NORTH") roomIndex = NORTH;
-	if (direction == "SOUTH") roomIndex = SOUTH;
-	if (direction == "EAST") roomIndex = EAST;
-	if (direction == "WEST") roomIndex = WEST;
-	if (direction == "UP") roomIndex = UP;
-	if (direction == "DOWN") roomIndex = DOWN;
+	else if (direction == "SOUTH") roomIndex = SOUTH;
+	else if (direction == "EAST") roomIndex = EAST;
+	else if (direction == "WEST") roomIndex = WEST;
+	else if (direction == "UP") roomIndex = UP;
+	else if (direction == "DOWN") roomIndex = DOWN;
+	else cout << "I cannot understand what direction " << direction << " is." << endl;
 	string roomName = player->actualRoom->getExit(roomIndex);
 	if (!roomName.empty()) {
 		cout << "Moving to direction: " + roomName << endl;
-		player->actualRoom = fetchRoomByName(roomName);
+		Room* targetRoom = fetchRoomByName(roomName);
+		if (!targetRoom->locked) {
+			player->actualRoom = targetRoom;
+			cout << targetRoom->entityDescription << endl;
+		}
+		else cout << "The entrance to the room in the "<< direction <<" direction is locked." << endl;
 	}
+	else cout << "There's no exit in direction: " << direction << endl;
 }
 
 void GameWorld::LookAt(std::string target) {
@@ -169,8 +229,8 @@ void GameWorld::Open(std::string target) {
 	cout << "Opening: " + target << endl;
 	bool opened, found, inInventory;
 	opened = found = inInventory = false;
-	Item* itemOfList = nullptr;
-	for (list<Item*>::iterator it = player->inventory.begin(); it != player->inventory.end() && !found; ++it) {
+	const Item* itemOfList = nullptr;
+	for (list<const Item*>::iterator it = player->inventory.begin(); it != player->inventory.end() && !found; ++it) {
 		itemOfList = *it;
 		if (itemOfList->entityName == target) {
 			found = true;
@@ -181,7 +241,7 @@ void GameWorld::Open(std::string target) {
 		}
 	}	
 	if (!found) {		
-		for (list<Item*>::iterator it = player->actualRoom->listOfItems.begin(); it != player->actualRoom->listOfItems.end() && !found; ++it) {
+		for (list<const Item*>::iterator it = player->actualRoom->listOfItems.begin(); it != player->actualRoom->listOfItems.end() && !found; ++it) {
 			itemOfList = *it;
 			if (itemOfList->entityName == target) {
 				found = true;
@@ -207,13 +267,16 @@ void GameWorld::Open(std::string target) {
 void GameWorld::Take(std::string target) {
 	cout << "Picking up: " + target << endl;
 	bool found = false;
-	Item* roomItem = nullptr;
-	for (list<Item*>::iterator it = player->actualRoom->listOfItems.begin(); it != player->actualRoom->listOfItems.end() && !found; ++it) {
+	const Item* roomItem = nullptr;
+	for (list<const Item*>::iterator it = player->actualRoom->listOfItems.begin(); it != player->actualRoom->listOfItems.end() && !found; ++it) {
 		if ((*it)->entityName == target) {
-			found = true;
-			player->inventory.push_back((*it));
-			roomItem = *it;
-			cout << "You add " << target << " to your inventory." << endl;
+			if ((*it)->canBePickedUp) {
+				found = true;
+				player->inventory.push_back((*it));
+				roomItem = *it;
+				cout << "You add " << target << " to your inventory." << endl;
+			}
+			else cout << target << " is locked in place and cannot be picked up" << endl;
 		}
 	}
 	if (!found) cout << "The item " << target << " is not here to be picked up!" << endl;
@@ -224,8 +287,8 @@ void GameWorld::Drop(std::string target) {
 	cout << "Dropping: " + target << endl;
 	if (!player->inventory.empty()) {
 		bool found = false;
-		Item* iter = nullptr;
-		for (list<Item*>::iterator it = player->inventory.begin(); it != player->inventory.end() && !found; ++it) {
+		const Item* iter = nullptr;
+		for (list<const Item*>::iterator it = player->inventory.begin(); it != player->inventory.end() && !found; ++it) {
 			if ((*it)->entityName == target) {
 				found = true;
 				player->actualRoom->listOfItems.push_back((*it));
@@ -238,3 +301,16 @@ void GameWorld::Drop(std::string target) {
 	}
 	else cout << "Your inventory is empty." << endl;
 }
+
+void GameWorld::addItems(const Item* (&list)[22]) {
+	for (int i = 0; i < 22; ++i) listOfItems.push_back(list[i]);
+}
+
+void GameWorld::addRooms( Room* const(&rooms)[13]) {
+	for (int i = 0; i < 12; ++i) listOfRooms.push_back(rooms[i]);
+}
+
+void GameWorld::addExitsToRooms(string const (&exitlist)[12][6]) {
+	for (int i = 0; i < 12; ++i) listOfRooms[i]->setExits(exitlist[i]);
+}
+

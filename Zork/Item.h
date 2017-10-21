@@ -9,13 +9,13 @@ class Item :
 {
 public:
 	Item();
-	Item(std::string name, std::string desc, bool combinable, bool key, Item* itemContained);
+	Item(std::string name, std::string desc, bool pickable, Item* itemContained, Item* combinedWith);
 	~Item();
 
 public:
-	bool combinable ;
-	bool key;
 	int keyOfEntity;
+	bool canBePickedUp;
 	Item* itemContained;
+	Item* puzzleSolution;
 };
 

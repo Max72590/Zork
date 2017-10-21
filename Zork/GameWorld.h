@@ -4,6 +4,7 @@
 #include <time.h>
 #include <string>
 #include <vector>
+#include <map>
 
 enum exitName { NORTH, SOUTH, EAST, WEST, UP, DOWN };
 	
@@ -18,9 +19,11 @@ public:
 	~GameWorld();
 
 	std::vector<Room*> listOfRooms;
-	std::vector<Item*> listOfItems;
+	std::vector<const Item*> listOfItems;
+	std::map<std::string, Item*> replacements;
 	Player *player;
 
+public:
 	void initGameWorld();
 	void setPlayer(Player *p);
 	void processInput(std::string input);
@@ -34,7 +37,9 @@ public:
 	void Open(std::string target1);
 	void Take(std::string target);
 	void Drop(std::string target);
-	
+	void addItems(const Item* (&list)[22]);
+	void addRooms(Room* const (&rooms)[13]);
+	void addExitsToRooms(std::string const (&exitlist)[12][6]);
 
 };
 

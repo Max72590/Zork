@@ -26,7 +26,7 @@ public:
 	void Drop(std::string target);*/
 
 public:
-	std::list<Item*> inventory;
+	std::list<const Item*> inventory;
 	Room *actualRoom;
 
 };

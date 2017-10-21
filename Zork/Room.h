@@ -15,12 +15,10 @@ public:
 
 	void checkIfKeyOpensRoom(std::string name);
 	std::string getExit(int index);
-	void setExits(std::vector<std::string> &exits);
-	void takeItem(std::string itemName);
-	void addItems(std::list<Item*> itemsToAdd);
+	void setExits(std::string const (&exits)[6]);
 
 public:
-	std::list<Item*> listOfItems;
+	std::list<const Item*> listOfItems;
 	std::vector<std::string> listOfExits = std::vector<std::string>(6,"");
 	bool locked;
 	
