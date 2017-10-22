@@ -1,9 +1,9 @@
 #pragma once
 #include "Entity.h"
 #include <list>
+#include <string>
 #include <vector>
-
-class Item;
+#include "Item.h"
 
 class Room :
 	public Entity
@@ -11,16 +11,17 @@ class Room :
 public:
 	Room();
 	~Room();
-	Room(std::string name, std::string description, bool lock);
+	Room(std::string name, std::string description, Item* lock);
 
-	void checkIfKeyOpensRoom(std::string name);
 	std::string getExit(int index);
 	void setExits(std::string const (&exits)[6]);
+	void unlock( Item* key);
+	Item* fetchItemFromRoom(std::string target);
 
 public:
-	std::list<const Item*> listOfItems;
+	std::list< Item*> listOfItems;
 	std::vector<std::string> listOfExits = std::vector<std::string>(6,"");
-	bool locked;
+	 Item* lockedBy;
 	
 };
 

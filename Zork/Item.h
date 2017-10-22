@@ -2,20 +2,21 @@
 #include "Entity.h"
 #include <string>
 
-enum itemType {OBJECT, DOOR};
-
 class Item :
 	public Entity
 {
 public:
 	Item();
-	Item(std::string name, std::string desc, bool pickable, Item* itemContained, Item* combinedWith);
+	Item(std::string name, std::string desc, bool pickable, bool isKey, Item* itemContained, Item* itemCombinedWith);
 	~Item();
+	void putItem( Item* itemToPut);
+	void emptyItem();
 
 public:
-	int keyOfEntity;
 	bool canBePickedUp;
+	bool isKey;
 	Item* itemContained;
-	Item* puzzleSolution;
+	const Item* combinedWith;
+
 };
 

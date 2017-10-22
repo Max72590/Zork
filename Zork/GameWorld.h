@@ -1,7 +1,6 @@
 #pragma once
 #include"Entity.h"
 #include <list>
-#include <time.h>
 #include <string>
 #include <vector>
 #include <map>
@@ -19,8 +18,9 @@ public:
 	~GameWorld();
 
 	std::vector<Room*> listOfRooms;
-	std::vector<const Item*> listOfItems;
+	std::vector< Item*> listOfItems;	
 	std::map<std::string, Item*> replacements;
+	std::map<std::string, Room*> keyToRoom;
 	Player *player;
 
 public:
@@ -33,13 +33,16 @@ public:
 	void lookTarget(std::string name);
 	void MoveToDirection(std::string direction);
 	void LookAt(std::string target);
-	void UseItem(std::string target1, std::string target2);
+	void UseItemWith(std::string target1, std::string target2);
 	void Open(std::string target1);
 	void Take(std::string target);
 	void Drop(std::string target);
-	void addItems(const Item* (&list)[22]);
-	void addRooms(Room* const (&rooms)[13]);
-	void addExitsToRooms(std::string const (&exitlist)[12][6]);
-
+	void Combine(std::string target1, std::string target2);
+	void CheckInventory();
+	void addItems(Item* list[], int size);
+	void addRooms(std::vector<Room*> (&rooms));
+	void addExitsToRooms(std::string  exitlist[][6],int size);
+	void openRoom( Item* key);
+	//void processItemUsage();
 };
 

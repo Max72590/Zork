@@ -1,12 +1,12 @@
 #pragma once
 #include "Entity.h"
-//#include "Item.h"
+#include "Item.h"
 //#include "Room.h"
 
 #include <list>
 
 class Room;
-class Item;
+
 
 
 class Player :
@@ -16,8 +16,10 @@ public:
 	Player();
 	~Player();
 
-	void addItem(Item* item);
-	void removeItem(Item* item);
+	void addItem( Item* item);
+	void removeItem( Item* item);
+	 Item* fetchItem(std::string target);
+	 std::list<Item*> fetchInventory();
 	/*void MoveToDirection(std::string direction);
 	void LookAt(std::string target);
 	void UseItem(std::string target1, std::string target2);
@@ -26,7 +28,7 @@ public:
 	void Drop(std::string target);*/
 
 public:
-	std::list<const Item*> inventory;
+	std::list<Item*> inventory;
 	Room *actualRoom;
 
 };

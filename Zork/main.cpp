@@ -19,9 +19,12 @@ int main() {
 			inputChar = _getch();
 			if (inputChar == '\r') {
 				cout << endl;
+				cout << endl;
+				cout << endl;
 				gm.processInput(input);
 				input.clear();
-				
+				cout << endl;
+				cout << endl;
 			}
 			else if (inputChar == '\b') {
 				if (input.size() > 0) {
