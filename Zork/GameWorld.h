@@ -22,7 +22,7 @@ public:
 	std::map<std::string, Item*> replacements;
 	std::map<std::string, Room*> keyToRoom;
 	Player *player;
-
+	
 public:
 	void initGameWorld();
 	void setPlayer(Player *p);
@@ -43,6 +43,10 @@ public:
 	void addRooms(std::vector<Room*> (&rooms));
 	void addExitsToRooms(std::string  exitlist[][6],int size);
 	void openRoom( Item* key);
+	void win();
+	bool getWin();
 	//void processItemUsage();
+private:
+	bool winGame;
 };
 

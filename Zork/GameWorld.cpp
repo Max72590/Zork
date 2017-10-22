@@ -3,14 +3,12 @@
 #include "Player.h"
 #include "Room.h"
 #include "Item.h"
-#include <list>
-#include <utility> 
-#include <iostream>
 
 using namespace std;
 
 GameWorld::GameWorld()
 {
+	winGame = false;
 }
 
 
@@ -41,8 +39,8 @@ void GameWorld::initGameWorld() {
 	Item* bellBox = new Item("Metal_box","A small metalic box with a bell shape etched into it", true, false, bellStick, nullptr);
 	Item* bell = new Item("Bell", "A small metalic bell",true, false, nullptr, bellStick);
 	Item* room8Lock = new Item("Strange_lock","This lock unlike the others doesn't have a keyhole but a musical symbol etched into it.", false, false, nullptr,bell);
-	Item* antidote = new Item();
-	Item* note = new Item();
+	Item* antidote = new Item("Bottle","A green bottle filled with liquid, the tag says: Antidote ",true,false,nullptr,nullptr);
+	Item* note = new Item("Note","Congratulations on getting inside this house, i don't think you noticed but the door pommel was poisoned. A special poison that it's absorbed through your skin, you have about 20 minutes of live, spend them well.", true, false, nullptr, nullptr);
 
 	Item* itemList[] = { entranceKey , waterKey, closedWindow, openedWindow, jug, filledJug, lockedfaucet, faucet, fireplace, fireplaceOff, room3Key, room3Lock, waxFigure, room5Key, room5Lock,
 	 stove, bellStick, bellBox, bell, room8Lock, antidote,note};
@@ -67,6 +65,7 @@ void GameWorld::initGameWorld() {
 	frontHouse->listOfItems.push_back(entranceLock);
 	backHouse->listOfItems.push_back(entranceKey);
 	entrance->listOfItems.push_back(jug);
+	entrance->listOfItems.push_back(note);
 	Room2->listOfItems.push_back(fireplace);
 	Room2->listOfItems.push_back(closedWindow);
 	Room2->listOfItems.push_back(room3Lock);
@@ -77,6 +76,7 @@ void GameWorld::initGameWorld() {
 	Room4->listOfItems.push_back(room5Lock);
 	Room5->listOfItems.push_back(bellBox);
 	Room7->listOfItems.push_back(room8Lock);
+	Room8->listOfItems.push_back(antidote);
 	
 	replacements[closedWindow->entityName] = openedWindow;
 	replacements[fireplace->entityName] = fireplaceOff;
@@ -97,9 +97,10 @@ void GameWorld::initGameWorld() {
 	{ "","Room8","","","","Room6" },{ "Room7","","","","","" } };
 	addExitsToRooms(listOfExits, 12);
 
-	//player->actualRoom = frontHouse;
-	player->actualRoom = Room5;
-	player->addItem(bell);
+	player->actualRoom = frontHouse;
+	cout<<player->actualRoom->entityDescription << endl;
+	cout << endl;
+	cout << endl;
 }
 
 void GameWorld::setPlayer(Player *p) {
@@ -363,7 +364,7 @@ void GameWorld::Take(string target) {
 				found = true;
 				player->inventory.push_back(roomItem);
 				cout << "You add " << target << " to your inventory." << endl;
-				if (roomItem->entityName == "Antidote") cout << "" << endl;
+				if (roomItem->entityName == "Bottle") win();
 			}
 			else cout << target << " is locked in place and cannot be picked up" << endl;
 		}
@@ -446,4 +447,14 @@ void GameWorld::openRoom( Item* key) {
 		cout << "You unlocked the next room!" << endl;
 	}
 	else cout << "This key doesn't open the door." << endl;
+}
+
+void GameWorld::win() {
+	cout << "You drink the antidote as fast as you can."<<endl;
+	cout << "Your body starts to stabilize and the poison inside your body is neutralized" << endl;
+	cout << "You survived through this one by the skin of your teeth. Well played." << endl;
+	winGame = true;
+}
+bool GameWorld::getWin() {
+	return winGame;
 }

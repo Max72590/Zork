@@ -1,7 +1,7 @@
-#include <iostream>
-#include <string>
+
 #include "conio.h"
 #include "GameWorld.h"
+#include "Globals.h"
 #include "Player.h"
 
 using namespace std;
@@ -14,7 +14,7 @@ int main() {
 	string input;
 	char inputChar;
 	bool looping = true;
-	while (looping) {
+	while (looping && !gm.getWin()) {
 		if (_kbhit()) {
 			inputChar = _getch();
 			if (inputChar == '\r') {
@@ -41,5 +41,6 @@ int main() {
 		}
 	}
 	cout << "Exited the game successfully." << endl;
+	system("pause");
 	return 0;
 }

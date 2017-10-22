@@ -2,10 +2,10 @@
 #include "GameWorld.h"
 using namespace std;
 
-Player::Player()
-{
+Player::Player(){
 	entityName = "Player";
 	entityDescription = "It's just me.";
+	health = 20;
 }
 
 
