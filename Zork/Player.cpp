@@ -35,3 +35,15 @@ void Player::removeItem( Item* item) {
  std::list<Item*> Player::fetchInventory() {
 	 return inventory;
  }
+
+ int Player::playerUpdateHealth(int damage) {
+	 return health - damage;
+ }
+
+ bool Player::isPlayerDead() {
+	 return health <= 0;
+ }
+
+ Room* Player::getRoom() {
+	 return actualRoom;
+ }

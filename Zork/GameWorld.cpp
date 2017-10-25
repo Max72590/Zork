@@ -2,6 +2,7 @@
 #include "Globals.h"
 #include "Player.h"
 #include "Room.h"
+#include "NPC.h"
 #include "Item.h"
 
 using namespace std;
@@ -97,10 +98,16 @@ void GameWorld::initGameWorld() {
 	{ "","Room8","","","","Room6" },{ "Room7","","","","","" } };
 	addExitsToRooms(listOfExits, 12);
 
-	player->actualRoom = frontHouse;
+	NPC* haemonculus = new NPC("Prisoner","A man dressed in rags restrained through 3 shackles.");
+	listOfNPCs[haemonculus->entityName] = haemonculus;
+	Room8->addNPC(haemonculus);
+
+	//player->actualRoom = frontHouse;
+	player->actualRoom = Room8;
 	cout<<player->actualRoom->entityDescription << endl;
 	cout << endl;
 	cout << endl;
+	playerState = ROAMING_MODE;
 }
 
 void GameWorld::setPlayer(Player *p) {
@@ -108,52 +115,72 @@ void GameWorld::setPlayer(Player *p) {
 }
 
 void GameWorld::processInput(string input) {
-	cout << "Processing input: " << input << endl;
+	if (DEBUG_MODE) cout << "Processing input: " << input << endl;
 	if (!input.empty()) {
-		vector<string> parameters;
-		getParameters(input, &parameters);
-		if (parameters.size() >= 1) {
-			string command = parameters[0];
-			if (command == "LOOK") {
-				if (parameters.size()-1 > 1) printNumberArgumentsError(1, ((int)parameters.size()) - 1);
-				else {
-					if (parameters.size() == 1) LookAt("this room") ;
-					else LookAt(parameters[1]);
+		if (playerState == DIALOGUE_MODE) {
+			if (dialoguingNPC != nullptr) { 
+				if (!dialoguingNPC->checkAnswer(input)) {
+					cout << "The shackles start to emit a strange energy... you feel weaker. You lost 5 points of life." << endl;
+					cout << "You have " << player->playerUpdateHealth(5) << " out of 20." << endl;
+					if (player->isPlayerDead()) state = GAME_DEFEAT;
 				}
-			}
-			else if (command == "USE") {
-				if (parameters.size()-1 != 3) printNumberArgumentsError(3, ((int)parameters.size()) - 1);
-				else UseItemWith(parameters[1], parameters[3]);
-			}
-			else if (command == "NORTH" || command == "SOUTH" || command == "EAST" || command == "WEST" || command == "UP" || command == "DOWN") {
-				if (parameters.size()-1 != 0) printNumberArgumentsError(0, ((int)parameters.size()) - 1);
-				else MoveToDirection(parameters[0]);
-			}
-			else if (command == "OPEN") {
-				if (parameters.size()-1 != 1) printNumberArgumentsError(1, ((int)parameters.size()) - 1);
-				else Open(parameters[1]);
-			}
-			else if (command == "TAKE") {
-				if (parameters.size()-1 != 1) printNumberArgumentsError(1, ((int)parameters.size()) - 1);
-				else Take(parameters[1]);
-			}
-			else if (command == "DROP") {
-				if (parameters.size()-1 > 1) printNumberArgumentsError(1, ((int)parameters.size()) - 1);
-				else Drop(parameters[1]);
-			}
-			else if (command == "COMBINE") {
-				if (parameters.size() - 1 != 3) printNumberArgumentsError(3, ((int)parameters.size()) - 1);
-				else Combine(parameters[1], parameters[3]);
-			}
-			else if (command == "INVENTORY") {
-				if (parameters.size() - 1 > 0) printNumberArgumentsError(0, ((int)parameters.size()) - 1);
-				else CheckInventory();
-			}
-			else {
-				cout << "Command not recognized" << endl;
+				if (dialoguingNPC->correctlyAnsweredAll()) { 
+					dialoguingNPC->printEndDialogue();
+					win();
+				}
+				else dialoguingNPC->printRiddle();
 			}
 		}
-		else cout << "Not enough arguments" << endl;
+		else{
+			vector<string> parameters;
+			getParameters(input, &parameters);
+			if (parameters.size() >= 1) {
+				string command = parameters[0];
+				if (command == "LOOK") {
+					if (parameters.size() - 1 > 1) printNumberArgumentsError(1, ((int)parameters.size()) - 1);
+					else {
+						if (parameters.size() == 1) LookAt("this room");
+						else LookAt(parameters[1]);
+					}
+				}
+				else if (command == "USE") {
+					if (parameters.size() - 1 != 3) printNumberArgumentsError(3, ((int)parameters.size()) - 1);
+					else UseItemWith(parameters[1], parameters[3]);
+				}
+				else if (command == "NORTH" || command == "SOUTH" || command == "EAST" || command == "WEST" || command == "UP" || command == "DOWN") {
+					if (parameters.size() - 1 != 0) printNumberArgumentsError(0, ((int)parameters.size()) - 1);
+					else MoveToDirection(parameters[0]);
+				}
+				else if (command == "OPEN") {
+					if (parameters.size() - 1 != 1) printNumberArgumentsError(1, ((int)parameters.size()) - 1);
+					else Open(parameters[1]);
+				}
+				else if (command == "TAKE") {
+					if (parameters.size() - 1 != 1) printNumberArgumentsError(1, ((int)parameters.size()) - 1);
+					else Take(parameters[1]);
+				}
+				else if (command == "DROP") {
+					if (parameters.size() - 1 > 1) printNumberArgumentsError(1, ((int)parameters.size()) - 1);
+					else Drop(parameters[1]);
+				}
+				else if (command == "COMBINE") {
+					if (parameters.size() - 1 != 3) printNumberArgumentsError(3, ((int)parameters.size()) - 1);
+					else Combine(parameters[1], parameters[3]);
+				}
+				else if (command == "INVENTORY") {
+					if (parameters.size() - 1 > 0) printNumberArgumentsError(0, ((int)parameters.size()) - 1);
+					else CheckInventory();
+				}
+				else if (command == "TALK") {
+					if (parameters.size() - 1 != 1) printNumberArgumentsError(1, ((int)parameters.size()) - 1);
+					else Talk(parameters[1]);
+				}
+				else {
+					cout << "Command not recognized" << endl;
+				}
+			}
+			else cout << "Not enough arguments" << endl;
+		}
 	}
 }
 
@@ -181,6 +208,37 @@ Room* GameWorld::fetchRoomByName(string name) {
 	return nullptr;
 }
 
+void GameWorld::addItems(Item* list[], int size) {
+	for (int i = 0; i < size; ++i) listOfItems.push_back(list[i]);
+}
+
+void GameWorld::addRooms(vector<Room*>(&rooms)) {
+	for (int i = 0; i < 12; ++i) listOfRooms.push_back(rooms[i]);
+}
+
+void GameWorld::addExitsToRooms(string  exitlist[][6], int size) {
+	for (int i = 0; i < size; ++i) listOfRooms[i]->setExits(exitlist[i]);
+}
+
+void GameWorld::openRoom(Item* key) {
+	map<string, Room*>::iterator it = keyToRoom.find(key->entityName);
+	if (it != keyToRoom.end()) {
+		(*it).second->unlock(key);
+		cout << "You unlocked the next room!" << endl;
+	}
+	else cout << "This key doesn't open the door." << endl;
+}
+
+void GameWorld::win() {
+	cout << "You drink the antidote as fast as you can." << endl;
+	cout << "Your body starts to stabilize and the poison inside your body is neutralized" << endl;
+	cout << "You survived through this one by the skin of your teeth. Well played." << endl;
+	state = GAME_VICTORY;
+}
+
+int GameWorld::checkState() {
+	return state;
+}
 
 void GameWorld::printNumberArgumentsError(int argumentsNeeded, int argumentsProvided) {
 	cout << "Error number of arguments invalid, arguments needed: " << argumentsNeeded << " arguments provided: " << argumentsProvided << endl;
@@ -212,7 +270,7 @@ void GameWorld::MoveToDirection(string direction) {
 }
 
 void GameWorld::LookAt(string target) {
-	cout << "Looking at: " + target << endl;
+	if (DEBUG_MODE) cout << "Looking at: " + target << endl;
 	lookTarget(target);	 
 }
 
@@ -228,9 +286,19 @@ void GameWorld::lookTarget(string name) {
 		for (list<Item*>::iterator it = player->actualRoom->listOfItems.begin(); it != player->actualRoom->listOfItems.end(); ++it) {
 			cout << "There the item: " << (*it)->entityName << endl;
 		}
+		for (map<string, NPC*>::iterator it = player->getRoom()->listOfRoomNPCs.begin(); it != player->getRoom()->listOfRoomNPCs.end(); ++it) {
+			cout << "There someone: " << (*it).second->entityName << endl;
+		}
 		found = true;
 	}
-	else if (!found && name == player->actualRoom->entityName) {
+	else if (!found) {
+		map<string, NPC*>::iterator it = listOfNPCs.find(name);
+		if (it != listOfNPCs.end()) {
+			cout << (*it).second->entityDescription << endl;
+			found = true;
+		}
+	}
+	else if (!found && name == player->getRoom()->entityName) {
 		cout << player->actualRoom->entityDescription << endl;
 		found = true;
 		if (!(*roomItems).empty()) {
@@ -252,7 +320,7 @@ void GameWorld::lookTarget(string name) {
 }
 
 void GameWorld::UseItemWith(string target1, std::string target2) {
-	cout << "Using: " + target1 + " on " + target2 << endl;
+	if (DEBUG_MODE) cout << "Using: " + target1 + " on " + target2 << endl;
 	if (target1 != target2) {
 		pair< Item*,  Item*> itemPair(nullptr, nullptr);
 		itemPair.first = player->fetchItem(target1);
@@ -310,7 +378,7 @@ void GameWorld::UseItemWith(string target1, std::string target2) {
 }
 
 void GameWorld::Open(string target) {
-	cout << "Opening: " + target << endl;
+	if (DEBUG_MODE) cout << "Opening: " + target << endl;
 	bool opened, inInventory;
 	opened = inInventory = false;
 	 Item* itemOfList =player->fetchItem(target);
@@ -355,7 +423,7 @@ void GameWorld::Open(string target) {
 }
 
 void GameWorld::Take(string target) {
-	cout << "Picking up: " + target << endl;
+	if (DEBUG_MODE) cout << "Picking up: " + target << endl;
 	bool found = false;
 	Item* roomItem = player->actualRoom->fetchItemFromRoom(target);
 	if (roomItem != nullptr){
@@ -374,7 +442,7 @@ void GameWorld::Take(string target) {
 }
 
 void GameWorld::Drop(string target) {
-	cout << "Dropping: " + target << endl;
+	if (DEBUG_MODE) cout << "Dropping: " + target << endl;
 	if (!player->inventory.empty()) {
 		bool found = false;
 		Item* iter = player->fetchItem(target);
@@ -392,7 +460,7 @@ void GameWorld::Drop(string target) {
 }
 
 void GameWorld::Combine(string target1, string target2) {
-	cout << "Combining: " + target1 << " with "<<target2<< endl;
+	if (DEBUG_MODE) cout << "Combining: " + target1 << " with "<<target2<< endl;
 	Item* itemToPut = player->fetchItem(target1);
 	if (itemToPut != nullptr) {
 		Item* receivingItem = player->fetchItem(target2);
@@ -428,33 +496,13 @@ void GameWorld::CheckInventory() {
 	}
 }
 
-void GameWorld::addItems(Item* list[], int size) {
-	for (int i = 0; i < size; ++i) listOfItems.push_back(list[i]);
-}
-
-void GameWorld::addRooms(vector<Room*> (&rooms)) {
-	for (int i = 0; i < 12; ++i) listOfRooms.push_back(rooms[i]);
-}
-
-void GameWorld::addExitsToRooms(string  exitlist[][6], int size) {
-	for (int i = 0; i < size; ++i) listOfRooms[i]->setExits(exitlist[i]);
-}
-
-void GameWorld::openRoom( Item* key) {
-	map<string, Room*>::iterator it = keyToRoom.find(key->entityName);
-	if (it != keyToRoom.end()) {
-		(*it).second->unlock(key);
-		cout << "You unlocked the next room!" << endl;
+void GameWorld::Talk(string target) {
+	NPC* ptrNPC = player->getRoom()->fetchNPCFromRoom(target);
+	if (ptrNPC!= nullptr) {
+		playerState = DIALOGUE_MODE;
+		dialoguingNPC = ptrNPC;
+		dialoguingNPC->printIntro();
+		dialoguingNPC->printRiddle();
 	}
-	else cout << "This key doesn't open the door." << endl;
-}
-
-void GameWorld::win() {
-	cout << "You drink the antidote as fast as you can."<<endl;
-	cout << "Your body starts to stabilize and the poison inside your body is neutralized" << endl;
-	cout << "You survived through this one by the skin of your teeth. Well played." << endl;
-	winGame = true;
-}
-bool GameWorld::getWin() {
-	return winGame;
+	else cout << "There's no " << target << " in the room." << endl;
 }

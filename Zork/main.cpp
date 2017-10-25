@@ -14,31 +14,45 @@ int main() {
 	string input;
 	char inputChar;
 	bool looping = true;
-	while (looping && !gm.getWin()) {
-		if (_kbhit()) {
-			inputChar = _getch();
-			if (inputChar == '\r') {
-				cout << endl;
-				cout << endl;
-				cout << endl;
-				gm.processInput(input);
-				input.clear();
-				cout << endl;
-				cout << endl;
-			}
-			else if (inputChar == '\b') {
-				if (input.size() > 0) {
-					input.pop_back();
+	int gameState = KEEP_LOOPING;
+	while (looping) {
+		gameState = gm.checkState();
+		switch (gameState) {
+		case KEEP_LOOPING:
+			if (_kbhit()) {
+				inputChar = _getch();
+				if (inputChar == '\r') {
+					cout << endl;
+					cout << endl;
+					cout << endl;
+					gm.processInput(input);
+					input.clear();
+					cout << endl;
+					cout << endl;
+				}
+				else if (inputChar == '\b') {
+					if (input.size() > 0) {
+						input.pop_back();
+						cout << inputChar;
+						cout << " ";
+						cout << inputChar;
+					}
+				}
+				else {
 					cout << inputChar;
-					cout << " ";
-					cout << inputChar;
+					input = input + inputChar;
 				}
 			}
-			else {
-				cout << inputChar;
-				input = input + inputChar;
-			}
+			break;
+		
+		case GAME_VICTORY:
+			looping = false;
+			break;
+		case GAME_DEFEAT:
+			looping = false;
+			break;
 		}
+			
 	}
 	cout << "Exited the game successfully." << endl;
 	system("pause");

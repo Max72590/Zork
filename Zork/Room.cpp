@@ -43,3 +43,13 @@ Item* Room::fetchItemFromRoom(std::string target) {
 	}
 	return nullptr;
 }
+
+NPC* Room::fetchNPCFromRoom(std::string name) {
+	map<string, NPC*>::iterator it = listOfRoomNPCs.find(name);
+	if (it != listOfRoomNPCs.end()) return (*it).second;
+	else return nullptr;
+}
+
+void Room::addNPC(NPC* npc) {
+	listOfRoomNPCs[(*npc).entityName] = npc;
+}
