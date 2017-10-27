@@ -64,4 +64,7 @@ bool NPC::correctlyAnsweredAll() {
 
 void NPC::printIntro() {
 	cout << NPC_INTRO << endl;
+	cout << endl;
+	cout << NPC_RIDDLE_START << endl;
+	cout << endl;
 }

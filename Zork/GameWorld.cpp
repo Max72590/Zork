@@ -7,6 +7,8 @@
 
 using namespace std;
 
+
+
 GameWorld::GameWorld()
 {
 	winGame = false;
@@ -19,46 +21,45 @@ GameWorld::~GameWorld()
 
 void GameWorld::initGameWorld() {
 
-	Item* entranceKey = new Item("House_key", "A small key.", true, true, nullptr, nullptr);
-	Item* entranceLock = new Item("Entrance_lock", "There's a lock, the door won't budge unless this lock is opened.", false, false, nullptr, entranceKey);
-	Item* waterKey = new Item("Water_key", "A small blue key with a waterdrop symbol", true, false, nullptr, nullptr);
-	Item* closedWindow = new Item("Closed_window", "It's a window with its panels closed, it doesn't appear they're locked.",false, false, waterKey,nullptr);
-	Item* openedWindow = new Item("Window", "It's a window with its panels open, there's a good view of the outside.", false, false, nullptr, nullptr);
-	Item* jug = new Item("Jug", "An empty water jug.", true, false, nullptr, nullptr);
-	Item* filledJug = new Item("Filled_jug", "A water jug filled with water, as it should be.", true, false, nullptr, nullptr);
-	Item* lockedfaucet = new Item("Locked_faucet", "It's a water faucet but there's a lock on it, you cannot get water from it in this state.", false, false, nullptr, waterKey);
-	Item* faucet = new Item("Faucet", "It's a water faucet, now you can get water from it! If you have something to hold the water with, of course.", false, false, nullptr, jug);
-	Item* room3Key = new Item("Blue_key", "A blue colored key.", true, true, nullptr, nullptr);
-	Item* room3Lock = new Item("Blue_lock", "A blue colored lock is keeping the door locked.", false, false, nullptr, room3Key);
-	Item* fireplace = new Item("Fireplace", "A lit fireplace, it's warming the entire room... wait there's something on the back of the fireplace.",false, false, nullptr, filledJug);
-	Item* fireplaceOff = new Item("Fireplace_box", "Inside the fireplace there's a box.", false, false, room3Key, nullptr);
-	Item* waxFigure = new Item("Wax_figure", "A whole new wax candle. It has never been used", true, false, nullptr, nullptr);
-	Item* room5Key = new Item("Green_key", "A green colored key.", true, true, nullptr, nullptr);
-	Item* room5Lock = new Item("Green_lock", "A blue colored lock is keeping the door locked.", false, false, nullptr, room5Key);
-	Item* stove = new Item("Stove", "A fully functional stove", false, false, nullptr, waxFigure);
-	Item* bellStick = new Item("Bell-clapper", "A silver bell-clapper, seems it can be used in conjunction with a bell", true, false, nullptr, nullptr);
-	Item* bellBox = new Item("Metal_box","A small metalic box with a bell shape etched into it", true, false, bellStick, nullptr);
-	Item* bell = new Item("Bell", "A small metalic bell",true, false, nullptr, bellStick);
-	Item* room8Lock = new Item("Strange_lock","This lock unlike the others doesn't have a keyhole but a musical symbol etched into it.", false, false, nullptr,bell);
-	Item* antidote = new Item("Bottle","A green bottle filled with liquid, the tag says: Antidote ",true,false,nullptr,nullptr);
-	Item* note = new Item("Note","Congratulations on getting inside this house, i don't think you noticed but the door pommel was poisoned. A special poison that it's absorbed through your skin, you have about 20 minutes of live, spend them well.", true, false, nullptr, nullptr);
+	Item* entranceKey = new Item("House_key", ENTRANCE_KEY_DESC, true, true, nullptr, nullptr);
+	Item* entranceLock = new Item("Entrance_lock", ENTRANCE_LOCK, false, false, nullptr, entranceKey);
+	Item* waterKey = new Item("Water_key", WATER_KEY, true, false, nullptr, nullptr);
+	Item* closedWindow = new Item("Closed_window", WINDOW_CLOSED,false, false, waterKey,nullptr);
+	Item* openedWindow = new Item("Window", WINDOW_OPEN, false, false, nullptr, nullptr);
+	Item* jug = new Item("Jug", JUG, true, false, nullptr, nullptr);
+	Item* filledJug = new Item("Filled_jug", JUG_FILLED, true, false, nullptr, nullptr);
+	Item* lockedfaucet = new Item("Locked_faucet", LOCKED_FAUCET, false, false, nullptr, waterKey);
+	Item* faucet = new Item("Faucet", FAUCET, false, false, nullptr, jug);
+	Item* room3Key = new Item("Blue_key", ROOM3_KEY, true, true, nullptr, nullptr);
+	Item* room3Lock = new Item("Blue_lock", ROOM3_LOCK, false, false, nullptr, room3Key);
+	Item* fireplace = new Item("Fireplace", FIREPLACE,false, false, nullptr, filledJug);
+	Item* fireplaceOff = new Item("Fireplace_box", FIREPLACE_OFF, false, false, room3Key, nullptr);
+	Item* waxFigure = new Item("Wax_figure", WAXFIGURE, true, false, nullptr, nullptr);
+	Item* room5Key = new Item("Green_key", ROOM5_KEY, true, true, nullptr, nullptr);
+	Item* room5Lock = new Item("Green_lock", ROOM5_LOCK, false, false, nullptr, room5Key);
+	Item* stove = new Item("Stove", STOVE, false, false, nullptr, waxFigure);
+	Item* bellStick = new Item("Bell-clapper", BELL_CLAPPER, true, false, nullptr, nullptr);
+	Item* bellBox = new Item("Metal_box", BELL_BOX, true, false, bellStick, nullptr);
+	Item* bell = new Item("Bell", BELL,true, false, nullptr, bellStick);
+	Item* room8Lock = new Item("Strange_lock",ROOM8_LOCK, false, false, nullptr,bell);
+	Item* note = new Item("Note",NOTE, true, false, nullptr, nullptr);
 
 	Item* itemList[] = { entranceKey , waterKey, closedWindow, openedWindow, jug, filledJug, lockedfaucet, faucet, fireplace, fireplaceOff, room3Key, room3Lock, waxFigure, room5Key, room5Lock,
-	 stove, bellStick, bellBox, bell, room8Lock, antidote,note};
+	 stove, bellStick, bellBox, bell, room8Lock,note};
 	addItems(itemList, 22);
 	
-	Room* frontHouse = new Room("Front House", "You find yourself in front of a house, there's nothing here save for yourself and one exit at NORTH.", nullptr);
-	Room* rightHouse = new Room("Right House", "You arrived to the west side of the house, there's only a path going NORTH and SOUTH.", nullptr);
-	Room* leftHouse = new Room("Left House", "You arrived to the east side of the house, there's only a path going NORTH and SOUTH.", nullptr);
-	Room* backHouse = new Room("Back House", "You're in the back of the house, there is an exit at the EAST and the WEST.", nullptr);
-	Room* entrance = new Room("House Entrance", "You're in the entrance room, there is an exit at the EAST and the WEST and a trapdoor.", nullptr);//entranceKey);
-	Room* Room2 = new Room("Room2", "You're in Room 2", nullptr);
-	Room* Room3 = new Room("Room3", "You're in Room 3", room3Key);
-	Room* Room4 = new Room("Room4", "You're in Room 4", nullptr);
-	Room* Room5 = new Room("Room5", "You're in Room 5", room5Key);
-	Room* Room6 = new Room("Room6", "You're in Room 6", nullptr);
-	Room* Room7 = new Room("Room7", "You're in Room 7", nullptr);
-	Room* Room8 = new Room("Room8", "You descended into the basement, there's nothing there save for an strange robed figure sitting in the back of the room.", bell);
+	Room* frontHouse = new Room("Front House", FRONT_HOUSE , nullptr);
+	Room* rightHouse = new Room("Right House", EAST_HOUSE, nullptr);
+	Room* leftHouse = new Room("Left House", WEST_HOUSE, nullptr);
+	Room* backHouse = new Room("Back House", BACK_HOUSE, nullptr);
+	Room* entrance = new Room("House Entrance",HOUSE_ENTRANCE, entranceKey);
+	Room* Room2 = new Room("Room2", ROOM2, nullptr);
+	Room* Room3 = new Room("Room3", ROOM3, room3Key);
+	Room* Room4 = new Room("Room4", ROOM4, nullptr);
+	Room* Room5 = new Room("Room5", ROOM5, room5Key);
+	Room* Room6 = new Room("Room6", ROOM6, nullptr);
+	Room* Room7 = new Room("Room7", ROOM7, nullptr);
+	Room* Room8 = new Room("Room8", ROOM8, bell);
 	Room* rooms[] = { frontHouse, rightHouse,leftHouse,backHouse,entrance,Room2,Room3,Room4, Room5, Room6, Room7, Room8 };
 	vector<Room*> r(rooms, rooms +sizeof(rooms) / sizeof(rooms[0]));
 	addRooms(r);
@@ -77,7 +78,6 @@ void GameWorld::initGameWorld() {
 	Room4->listOfItems.push_back(room5Lock);
 	Room5->listOfItems.push_back(bellBox);
 	Room7->listOfItems.push_back(room8Lock);
-	Room8->listOfItems.push_back(antidote);
 	
 	replacements[closedWindow->entityName] = openedWindow;
 	replacements[fireplace->entityName] = fireplaceOff;
@@ -102,12 +102,14 @@ void GameWorld::initGameWorld() {
 	listOfNPCs[haemonculus->entityName] = haemonculus;
 	Room8->addNPC(haemonculus);
 
-	//player->actualRoom = frontHouse;
-	player->actualRoom = Room8;
+	player->actualRoom = frontHouse;
+	//player->actualRoom = Room8;
+	player->inventory.push_back(entranceKey);
 	cout<<player->actualRoom->entityDescription << endl;
 	cout << endl;
 	cout << endl;
 	playerState = ROAMING_MODE;
+	GameTime = clock();
 }
 
 void GameWorld::setPlayer(Player *p) {
@@ -122,7 +124,10 @@ void GameWorld::processInput(string input) {
 				if (!dialoguingNPC->checkAnswer(input)) {
 					cout << "The shackles start to emit a strange energy... you feel weaker. You lost 5 points of life." << endl;
 					cout << "You have " << player->playerUpdateHealth(5) << " out of 20." << endl;
-					if (player->isPlayerDead()) state = GAME_DEFEAT;
+					if (player->isPlayerDead()) {
+						cout << TIMEUP_DEATH << endl;
+						state = GAME_DEFEAT;
+					}
 				}
 				if (dialoguingNPC->correctlyAnsweredAll()) { 
 					dialoguingNPC->printEndDialogue();
@@ -139,8 +144,8 @@ void GameWorld::processInput(string input) {
 				if (command == "LOOK") {
 					if (parameters.size() - 1 > 1) printNumberArgumentsError(1, ((int)parameters.size()) - 1);
 					else {
-						if (parameters.size() == 1) LookAt("this room");
-						else LookAt(parameters[1]);
+						if (parameters.size() == 1) LookTarget("this room");
+						else LookTarget(parameters[1]);
 					}
 				}
 				else if (command == "USE") {
@@ -174,6 +179,10 @@ void GameWorld::processInput(string input) {
 				else if (command == "TALK") {
 					if (parameters.size() - 1 != 1) printNumberArgumentsError(1, ((int)parameters.size()) - 1);
 					else Talk(parameters[1]);
+				}
+				else if (command == "TIME") {
+					if (parameters.size() - 1 > 0) printNumberArgumentsError(0, ((int)parameters.size()) - 1);
+					else Time();
 				}
 				else {
 					cout << "Command not recognized" << endl;
@@ -269,12 +278,10 @@ void GameWorld::MoveToDirection(string direction) {
 	else cout << "There's no exit in direction: " << direction << endl;
 }
 
-void GameWorld::LookAt(string target) {
-	if (DEBUG_MODE) cout << "Looking at: " + target << endl;
-	lookTarget(target);	 
-}
 
-void GameWorld::lookTarget(string name) {
+
+void GameWorld::LookTarget(string name) {
+	if (DEBUG_MODE) cout << "Looking at: " + name << endl;
 	list<Item*> *roomItems = &player->actualRoom->listOfItems;
 	bool found = false;
 	if (name == "me" || name == "myself") {
@@ -284,21 +291,14 @@ void GameWorld::lookTarget(string name) {
 	else if (name == "this room") {
 		cout << player->actualRoom->entityDescription << endl;
 		for (list<Item*>::iterator it = player->actualRoom->listOfItems.begin(); it != player->actualRoom->listOfItems.end(); ++it) {
-			cout << "There the item: " << (*it)->entityName << endl;
+			cout << "There's the item: " << (*it)->entityName << endl;
 		}
 		for (map<string, NPC*>::iterator it = player->getRoom()->listOfRoomNPCs.begin(); it != player->getRoom()->listOfRoomNPCs.end(); ++it) {
-			cout << "There someone: " << (*it).second->entityName << endl;
+			cout << "There's someone: " << (*it).second->entityName << endl;
 		}
 		found = true;
 	}
-	else if (!found) {
-		map<string, NPC*>::iterator it = listOfNPCs.find(name);
-		if (it != listOfNPCs.end()) {
-			cout << (*it).second->entityDescription << endl;
-			found = true;
-		}
-	}
-	else if (!found && name == player->getRoom()->entityName) {
+	else if (name == player->getRoom()->entityName) {
 		cout << player->actualRoom->entityDescription << endl;
 		found = true;
 		if (!(*roomItems).empty()) {
@@ -306,8 +306,13 @@ void GameWorld::lookTarget(string name) {
 			for (list<Item*>::iterator it = (*roomItems).begin(); it != (*roomItems).end(); ++it) cout << "There's " << (*it)->entityDescription << endl;
 		}
 	}
-	else {
-		if (!(*roomItems).empty()) {
+	else if (!found) {
+		map<string, NPC*>::iterator it = listOfNPCs.find(name);
+		if (it != listOfNPCs.end()) {
+			cout << (*it).second->entityDescription << endl;
+			found = true;
+		}
+		if (!(*roomItems).empty() && !found) {
 			for (list<Item*>::iterator it = (*roomItems).begin(); it != (*roomItems).end() && !found; ++it) {
 				if ((*it)->entityName == name) {
 					cout << (*it)->entityDescription << endl;
@@ -315,8 +320,13 @@ void GameWorld::lookTarget(string name) {
 				}
 			}
 		}
+		if (!found) {
+			Item* inventoryItem = player->fetchItem(name);
+			if (inventoryItem != nullptr) cout << inventoryItem->entityDescription << endl;
+			found = true;
+		}
+		if (!found) cout << "I cannot find " << name << " to look at." << endl;
 	}
-	if (!found) cout << "I cannot find " << name << " to look at." << endl;
 }
 
 void GameWorld::UseItemWith(string target1, std::string target2) {
@@ -339,7 +349,7 @@ void GameWorld::UseItemWith(string target1, std::string target2) {
 				  toBeCombined = itemPair.first;
 			}
 			if (toBeCombined != nullptr && combinationItem!= nullptr) {
-				cout << "toBeCombined is: " << toBeCombined->entityName << " combinationItem is: " << combinationItem->entityName << endl;
+				if (DEBUG_MODE) cout << "toBeCombined is: " << toBeCombined->entityName << " combinationItem is: " << combinationItem->entityName << endl;
 				if (combinationItem->entityName == toBeCombined->combinedWith->entityName){
 					if (combinationItem->isKey) {
 						openRoom(combinationItem);
@@ -490,7 +500,7 @@ void GameWorld::Combine(string target1, string target2) {
 }
 
 void GameWorld::CheckInventory() {
-	list<Item*> inventory = player->fetchInventory();
+	list<Item*> inventory = player->inventory;
 	for (list<Item*>::iterator it = inventory.begin(); it != inventory.end(); ++it) {
 		cout << (*it)->entityName << endl;
 	}
@@ -505,4 +515,13 @@ void GameWorld::Talk(string target) {
 		dialoguingNPC->printRiddle();
 	}
 	else cout << "There's no " << target << " in the room." << endl;
+}
+
+void GameWorld::Time() {
+	cout << clock() - GameTime / CLOCKS_PER_SEC << endl;
+
+}
+
+clock_t GameWorld::checkTime() {
+	return  (clock()-GameTime) / CLOCKS_PER_SEC;
 }

@@ -17,7 +17,6 @@ public:
 	void addItem( Item* item);
 	void removeItem( Item* item);
 	 Item* fetchItem(std::string target);
-	 std::list<Item*> fetchInventory();
 	 int playerUpdateHealth(int damage);
 	 bool isPlayerDead();
 	 Room* getRoom();

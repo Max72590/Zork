@@ -1,9 +1,7 @@
 #pragma once
 #include"Entity.h"
-#include <list>
-#include <string>
-#include <vector>
-#include <map>
+#include "Globals.h"
+
 
 enum exitName { NORTH, SOUTH, EAST, WEST, UP, DOWN };
 	
@@ -25,7 +23,7 @@ public:
 	std::map<std::string, Room*> keyToRoom;
 	Player *player;
 	NPC* dialoguingNPC;
-	int state, playerState;
+
 
 public:
 	void initGameWorld();
@@ -41,9 +39,8 @@ public:
 	void win();
 	int checkState();
 
-	void lookTarget(std::string name);
+	void LookTarget(std::string name);
 	void MoveToDirection(std::string direction);
-	void LookAt(std::string target);
 	void UseItemWith(std::string target1, std::string target2);
 	void Open(std::string target1);
 	void Take(std::string target);
@@ -51,9 +48,13 @@ public:
 	void Combine(std::string target1, std::string target2);
 	void CheckInventory();
 	void Talk(std::string target);
+	void Time();
 
+	clock_t checkTime();
 	//void processItemUsage();
 private:
 	bool winGame;
+	clock_t GameTime;
+	int state, playerState;
 };
 

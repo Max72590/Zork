@@ -1,5 +1,6 @@
 #include "Player.h"
 #include "GameWorld.h"
+#include <map>
 using namespace std;
 
 Player::Player(){
@@ -32,12 +33,9 @@ void Player::removeItem( Item* item) {
 	return nullptr;
 }
 
- std::list<Item*> Player::fetchInventory() {
-	 return inventory;
- }
-
  int Player::playerUpdateHealth(int damage) {
-	 return health - damage;
+	 health -= damage;
+	 return health;
  }
 
  bool Player::isPlayerDead() {
