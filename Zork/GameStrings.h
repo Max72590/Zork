@@ -90,7 +90,7 @@ a figure shackled to the wall."
 
 #define ROOM3_LOCK "A lock that bars the pass to anyone who wants to pass through the blue door."
 
-#define ROOM5_KEY "A wooden blue key"
+#define ROOM5_KEY "A wooden green key"
 
 #define ROOM5_LOCK "A green lock that locks the door."
 

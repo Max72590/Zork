@@ -102,9 +102,10 @@ void GameWorld::initGameWorld() {
 	listOfNPCs[haemonculus->entityName] = haemonculus;
 	Room8->addNPC(haemonculus);
 
-	player->actualRoom = frontHouse;
-	//player->actualRoom = Room8;
+	//player->actualRoom = frontHouse;
+	player->actualRoom = Room4;
 	player->inventory.push_back(entranceKey);
+	player->inventory.push_back(room5Key);
 	cout<<player->actualRoom->entityDescription << endl;
 	cout << endl;
 	cout << endl;
@@ -379,8 +380,8 @@ void GameWorld::UseItemWith(string target1, std::string target2) {
 			else cout << "You cannot use " << target1 << " with " << target2 <<"."<< endl;
 		}
 		else {
-			if (itemPair.first != nullptr) cout << "You only have " << itemPair.first->entityName << " but the other item is nowhere to be found." << endl;
-			else if (itemPair.second != nullptr) cout << "You only have " << itemPair.second->entityName << " but the other item is nowhere to be found." << endl;
+			if (itemPair.first != nullptr) cout << "You only have " << itemPair.first->entityName << " but the other item is nowhere to be found in the room or your inventory." << endl;
+			else if (itemPair.second != nullptr) cout << "You only have " << itemPair.second->entityName << " but the other item is nowhere to be found in the room or your inventory." << endl;
 			else cout << "You have neither of those items." << endl;
 		}
 	}
@@ -399,13 +400,15 @@ void GameWorld::Open(string target) {
 			itemOfList->isKey = false;
 		}
 	}
-	if (itemOfList == nullptr) {
-		itemOfList = player->actualRoom->fetchItemFromRoom(target);				
-		if (itemOfList != nullptr && itemOfList->itemContained != nullptr) {
-			opened = true;	
-		}
-		if (itemOfList->itemContained == nullptr) cout << "The item " << target << " is empty!" << endl;
+	else {
+		itemOfList = player->actualRoom->fetchItemFromRoom(target);
 		if (itemOfList == nullptr) cout << "The item " << target << " is not here to be opened!" << endl;
+		else {
+			if (itemOfList->itemContained != nullptr) {
+				opened = true;
+			}
+			else  cout << "The item " << target << " is empty!" << endl;
+		}		
 	}
 	if (itemOfList != nullptr) {
 		if (!opened) cout << " The item cannot be opened." << endl;
@@ -417,15 +420,16 @@ void GameWorld::Open(string target) {
 				//player->inventory.remove(itemOfList); 
 				//cout << ", and discard " << target << " ." << endl;
 				itemOfList->itemContained = nullptr;
-				cout << "I should not be discarding this" << endl;
+				//cout << "I should not be discarding this" << endl;
 			}
 			else {
 				//player->actualRoom->listOfItems.remove(itemOfList);
-				map<string,  Item*>::iterator it = replacements.find(itemOfList->entityName);
 				itemOfList->itemContained = nullptr;
+				map<string,  Item*>::iterator it = replacements.find(itemOfList->entityName);
 				if ( it != replacements.end()) {					
 					player->actualRoom->listOfItems.remove(itemOfList);
 					player->actualRoom->listOfItems.push_back((*it).second);
+					replacements.erase(itemOfList->entityName);
 				}
 			}
 		}
@@ -477,9 +481,10 @@ void GameWorld::Combine(string target1, string target2) {
 		if (receivingItem != nullptr && receivingItem->itemContained == nullptr) {
 			if (receivingItem->entityName == "Metal_box") {
 				receivingItem->putItem(itemToPut);
+				player->removeItem(itemToPut);
 				cout << "You put " << target1 << " inside Metal_box" << endl;
 			}
-			if ((receivingItem->entityName == "Bell" && itemToPut->entityName == "Bell-clapper")) {
+			else if ((receivingItem->entityName == "Bell" && itemToPut->entityName == "Bell-clapper")) {
 				cout << "You attached the bell-clapper to the bell, now the bell can be played, maybe you can USE it on something." << endl;
 				receivingItem->isKey = true;
 				receivingItem->putItem(itemToPut);
@@ -491,6 +496,7 @@ void GameWorld::Combine(string target1, string target2) {
 			receivingItem = player->actualRoom->fetchItemFromRoom(target2);
 			if (receivingItem != nullptr && !receivingItem->canBePickedUp && receivingItem->itemContained == nullptr) {
 				receivingItem->putItem(itemToPut);
+				player->removeItem(itemToPut);
 				cout << "You put " << target1 << " inside " << target2<<" .";
 			}
 			else cout << "You cannot put " << target1 << " inside "<< target2 << endl;
