@@ -40,5 +40,5 @@ The available commands are:
   * Tries to use _target1_ on _target2_.
 
 * COMBINE _target1_ with _target2_
-  * Puts an items inside another _target1_ on _target2_. Only certain items allow it.
+  * Puts an items inside another _target1_ on _target2_.
   
