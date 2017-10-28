@@ -102,8 +102,8 @@ void GameWorld::initGameWorld() {
 	listOfNPCs[haemonculus->entityName] = haemonculus;
 	Room8->addNPC(haemonculus);
 
-	//player->actualRoom = frontHouse;
-	player->actualRoom = Room4;
+	player->actualRoom = frontHouse;
+	//player->actualRoom = Room4;
 	player->inventory.push_back(entranceKey);
 	player->inventory.push_back(room5Key);
 	cout<<player->actualRoom->entityDescription << endl;
@@ -413,7 +413,7 @@ void GameWorld::Open(string target) {
 	if (itemOfList != nullptr) {
 		if (!opened) cout << " The item cannot be opened." << endl;
 		else {
-			player->inventory.push_back(itemOfList->itemContained);
+			player->addItem(itemOfList->itemContained);
 			cout << "You open " << target << " and you find " << itemOfList->itemContained->entityName << " inside!" << endl;
 			cout << "You add " << itemOfList->itemContained->entityName << " to your inventory";				
 			if (inInventory) { 
@@ -425,11 +425,13 @@ void GameWorld::Open(string target) {
 			else {
 				//player->actualRoom->listOfItems.remove(itemOfList);
 				itemOfList->itemContained = nullptr;
-				map<string,  Item*>::iterator it = replacements.find(itemOfList->entityName);
-				if ( it != replacements.end()) {					
-					player->actualRoom->listOfItems.remove(itemOfList);
-					player->actualRoom->listOfItems.push_back((*it).second);
-					replacements.erase(itemOfList->entityName);
+				if (itemOfList->entityName == "Closed_window") {
+					map<string, Item*>::iterator it = replacements.find(itemOfList->entityName);
+					if (it != replacements.end()) {
+						player->actualRoom->listOfItems.remove(itemOfList);
+						player->actualRoom->listOfItems.push_back((*it).second);
+						replacements.erase(itemOfList->entityName);
+					}
 				}
 			}
 		}
@@ -444,7 +446,7 @@ void GameWorld::Take(string target) {
 		if (roomItem->entityName == target) {
 			if (roomItem->canBePickedUp) {
 				found = true;
-				player->inventory.push_back(roomItem);
+				player->addItem(roomItem);
 				cout << "You add " << target << " to your inventory." << endl;
 				if (roomItem->entityName == "Bottle") win();
 			}
