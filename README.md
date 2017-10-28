@@ -4,6 +4,7 @@ This is my implementation for the assignment of creating a text based adventure
 game inspired in the classic Zork.
 
 Done by me: Maximino Puncernau Margarit.
+
 Link to the repository: https://github.com/Max72590/Zork/
 
 ## How to play:
