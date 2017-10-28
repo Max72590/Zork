@@ -265,7 +265,7 @@ void GameWorld::MoveToDirection(string direction) {
 	else cout << "I cannot understand what direction " << direction << " is." << endl;
 	string roomName = player->actualRoom->getExit(roomIndex);
 	if (!roomName.empty()) {
-		cout << "Moving to direction: " + roomName << endl;
+		if (DEBUG_MODE) cout << "Moving to direction: " + roomName << endl;
 		Room* targetRoom = fetchRoomByName(roomName);
 		if (targetRoom->lockedBy == nullptr) {
 			player->actualRoom = targetRoom;
@@ -417,13 +417,9 @@ void GameWorld::Open(string target) {
 			cout << "You open " << target << " and you find " << itemOfList->itemContained->entityName << " inside!" << endl;
 			cout << "You add " << itemOfList->itemContained->entityName << " to your inventory";				
 			if (inInventory) { 
-				//player->inventory.remove(itemOfList); 
-				//cout << ", and discard " << target << " ." << endl;
 				itemOfList->itemContained = nullptr;
-				//cout << "I should not be discarding this" << endl;
 			}
 			else {
-				//player->actualRoom->listOfItems.remove(itemOfList);
 				itemOfList->itemContained = nullptr;
 				if (itemOfList->entityName == "Closed_window") {
 					map<string, Item*>::iterator it = replacements.find(itemOfList->entityName);
