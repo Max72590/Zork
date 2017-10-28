@@ -14,12 +14,12 @@ public:
 	~NPC();
 
 public:
-	bool checkAnswer(std::string response);
-	void printRiddle();
-	void printEndDialogue();
-	int getIndex();
-	bool correctlyAnsweredAll();
-	void printIntro();
+	bool checkAnswer(std::string const response);
+	void const printRiddle();
+	void const printEndDialogue();
+	int const getIndex();
+	bool const correctlyAnsweredAll();
+	void const printIntro();
 
 private:
 	int riddleIndex;

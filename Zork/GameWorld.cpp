@@ -90,7 +90,7 @@ void GameWorld::initGameWorld() {
 	keyToRoom[room5Key->entityName] = Room5;
 	keyToRoom[bell->entityName] = Room8;
 
-	string  listOfExits[12][6] = { { "House Entrance","","Right House","Left House","","" },
+	string  listOfExits[12][6] = { { "House Entrance","","Left House","Right House","","" },
 	{ "Back House","Front House","","","","" }, { "Back House","Front House","","","","" },
 	{ "","","Right House","Left House","","" }, { "","Front House","Room4","Room2","","House Basement" },
 	{ "Room3","","House Entrance","","","" },{ "","Room2","","","","" },
@@ -194,7 +194,7 @@ void GameWorld::processInput(string input) {
 	}
 }
 
-void GameWorld::getParameters(string input, vector<string> *params) {
+void GameWorld::getParameters(string const input, vector<string> *params) {
 	string parameter;
 	for (int i = 0; i < (int)input.size(); ++i) {
 		if (i == input.size() - 1) {
@@ -211,7 +211,7 @@ void GameWorld::getParameters(string input, vector<string> *params) {
 
 } 
 
-Room* GameWorld::fetchRoomByName(string name) {
+Room* const GameWorld::fetchRoomByName(string name) {
 	for (Room* it : listOfRooms) {
 		if ( it->entityName == name) return it;
 	}
@@ -239,18 +239,18 @@ void GameWorld::openRoom(Item* key) {
 	else cout << "This key doesn't open the door." << endl;
 }
 
-void GameWorld::win() {
+void const GameWorld::win() {
 	cout << "You drink the antidote as fast as you can." << endl;
 	cout << "Your body starts to stabilize and the poison inside your body is neutralized" << endl;
 	cout << "You survived through this one by the skin of your teeth. Well played." << endl;
 	state = GAME_VICTORY;
 }
 
-int GameWorld::checkState() {
+int const GameWorld::checkState() {
 	return state;
 }
 
-void GameWorld::printNumberArgumentsError(int argumentsNeeded, int argumentsProvided) {
+void const GameWorld::printNumberArgumentsError(int argumentsNeeded, int argumentsProvided) {
 	cout << "Error number of arguments invalid, arguments needed: " << argumentsNeeded << " arguments provided: " << argumentsProvided << endl;
 }
 
@@ -281,7 +281,7 @@ void GameWorld::MoveToDirection(string direction) {
 
 
 
-void GameWorld::LookTarget(string name) {
+void const GameWorld::LookTarget(string name) {
 	if (DEBUG_MODE) cout << "Looking at: " + name << endl;
 	map<string,Item*> *roomItems = &player->actualRoom->listOfItems;
 	bool found = false;
@@ -507,7 +507,7 @@ void GameWorld::Combine(string target1, string target2) {
 	else cout << "No item: " << target1 << " found in inventory." << endl;
 }
 
-void GameWorld::CheckInventory() {
+void const GameWorld::CheckInventory() {
 	map<string, Item*>::iterator inventoryIt;
 	for (inventoryIt = player->inventory.begin(); inventoryIt != player->inventory.end(); ++inventoryIt) {
 		cout << inventoryIt->second->entityName << endl;
@@ -525,11 +525,11 @@ void GameWorld::Talk(string target) {
 	else cout << "There's no " << target << " in the room." << endl;
 }
 
-void GameWorld::Time() {
+void const GameWorld::Time() {
 	cout << clock() - GameTime / CLOCKS_PER_SEC << endl;
 
 }
 
-clock_t GameWorld::checkTime() {
+clock_t const GameWorld::checkTime() {
 	return  (clock()-GameTime) / CLOCKS_PER_SEC;
 }

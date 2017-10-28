@@ -3,7 +3,7 @@
 #include "Globals.h"
 
 
-enum exitName { NORTH, SOUTH, EAST, WEST, UP, DOWN };
+enum exitName { NORTH, SOUTH, WEST, EAST, UP, DOWN };
 	
 class Room;
 class Item;
@@ -28,29 +28,29 @@ public:
 public:
 	void initGameWorld();
 	void setPlayer(Player *p);
-	void processInput(std::string input);
-	void getParameters(std::string input, std::vector<std::string> *p);
-	void printNumberArgumentsError(int argumentsNeeded, int argumentsProvided);
-	Room* fetchRoomByName(std::string name);
+	void processInput(std::string const input);
+	void getParameters(std::string const input, std::vector<std::string> *p);
+	void const printNumberArgumentsError(int argumentsNeeded, int argumentsProvided);
+	Room* const fetchRoomByName(std::string name);
 	void addItems(Item* list[], int size);
 	void addRooms(std::vector<Room*>(&rooms));
 	void addExitsToRooms(std::string  exitlist[][6], int size);
 	void openRoom(Item* key);
-	void win();
-	int checkState();
+	void const win();
+	int const checkState();
 
-	void LookTarget(std::string name);
+	void const LookTarget(std::string name);
 	void MoveToDirection(std::string direction);
 	void UseItemWith(std::string target1, std::string target2);
 	void Open(std::string target1);
 	void Take(std::string target);
 	void Drop(std::string target);
 	void Combine(std::string target1, std::string target2);
-	void CheckInventory();
+	void const CheckInventory();
 	void Talk(std::string target);
-	void Time();
+	void const Time();
 
-	clock_t checkTime();
+	clock_t const checkTime();
 	//void processItemUsage();
 private:
 	bool winGame;

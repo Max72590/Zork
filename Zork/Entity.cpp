@@ -11,16 +11,5 @@ Entity::~Entity()
 {
 }
 
-void Entity::UpdateEntity() {
-
-}
-
-void Entity::UpdateParent(Entity *parent) {
-
-}
-
-void Entity::PrintMessage(string message) {
-	cout << message << endl;
-}
 
 

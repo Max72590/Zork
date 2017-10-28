@@ -24,14 +24,14 @@ NPC::~NPC()
 {
 }
 
-void NPC::printRiddle() {
+void const NPC::printRiddle() {
 	if (riddleIndex < (int)dialogueLines.size()) {
 		cout << dialogueLines[riddleIndex] << endl;
 		cout << riddleOptions[riddleIndex] << endl;
 	}
 }
 
-bool NPC::checkAnswer(string response) {
+bool NPC::checkAnswer(string const response) {
 	if (response >= "1" && response <= "3") {
 		int responseIndex = atoi(response.c_str());
 		if (responseIndex == correctAnswers[riddleIndex%2]) {
@@ -50,19 +50,19 @@ bool NPC::checkAnswer(string response) {
 	return true;
 }
 
-void NPC::printEndDialogue() {
+void const NPC::printEndDialogue() {
 	cout << END_DIALOGUE << endl;
 }
 
-int NPC::getIndex() {
+int const NPC::getIndex() {
 	return riddleIndex;
 }
 
-bool NPC::correctlyAnsweredAll() {
+bool const NPC::correctlyAnsweredAll() {
 	return riddleIndex > 2;
 }
 
-void NPC::printIntro() {
+void const NPC::printIntro() {
 	cout << NPC_INTRO << endl;
 	cout << endl;
 	cout << NPC_RIDDLE_START << endl;
