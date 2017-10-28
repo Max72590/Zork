@@ -103,14 +103,14 @@ void GameWorld::initGameWorld() {
 	Room8->addNPC(haemonculus);
 
 	player->actualRoom = frontHouse;
-	//player->actualRoom = Room4;
-	//player->addItem(entranceKey);
-	//player->addItem(room5Key);
+	cout << GAME_INTRO << endl;
+	cout << endl;
+	cout << endl;
 	cout<<player->actualRoom->entityDescription << endl;
 	cout << endl;
 	cout << endl;
 	playerState = ROAMING_MODE;
-	GameTime = clock();
+	enteredHouse = false;
 }
 
 void GameWorld::setPlayer(Player *p) {
@@ -266,6 +266,10 @@ void GameWorld::MoveToDirection(string direction) {
 	string roomName = player->actualRoom->getExit(roomIndex);
 	if (!roomName.empty()) {
 		if (DEBUG_MODE) cout << "Moving to direction: " + roomName << endl;
+		if (roomName == "House Entrance" && !enteredHouse) {
+			enteredHouse = true;
+			GameTime = clock();
+		}
 		Room* targetRoom = fetchRoomByName(roomName);
 		if (targetRoom->lockedBy == nullptr) {
 			player->actualRoom = targetRoom;
@@ -522,10 +526,15 @@ void GameWorld::Talk(string target) {
 }
 
 void const GameWorld::Time() {
-	cout << clock() - GameTime / CLOCKS_PER_SEC << endl;
+	if (!enteredHouse) cout << "Feeling fine, no need to worry about the time... right now." << endl;
+	else cout <<"Time passed since i was poisoned: "<< (clock()-GameTime) / CLOCKS_PER_SEC << endl;
 
 }
 
 clock_t const GameWorld::checkTime() {
 	return  (clock()-GameTime) / CLOCKS_PER_SEC;
+}
+
+bool const GameWorld::hasPlayerEnteredHouse() {
+	return enteredHouse;
 }

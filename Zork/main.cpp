@@ -20,13 +20,15 @@ int main() {
 	int gameState = KEEP_LOOPING;
 	while (looping) {
 		gameState = gm.checkState();
-		if ((float) (gm.checkTime() > (TOTAL_GAME_TIME/2) ) && !halfTimePassed) {
-			halfTimePassed = true;
-			cout << HALF_TIME_REMAINING << endl;
-		}
-		else if ((float)(gm.checkTime() > TOTAL_GAME_TIME) && halfTimePassed) {
-			cout << TIMEUP_DEATH << endl;
-			gameState = GAME_DEFEAT;
+		if (gm.hasPlayerEnteredHouse()) {
+			if ((float)(gm.checkTime() > (TOTAL_GAME_TIME / 2)) && !halfTimePassed) {
+				halfTimePassed = true;
+				cout << HALF_TIME_REMAINING << endl;
+			}
+			else if ((float)(gm.checkTime() > TOTAL_GAME_TIME) && halfTimePassed) {
+				cout << TIMEUP_DEATH << endl;
+				gameState = GAME_DEFEAT;
+			}
 		}
 		switch (gameState) {
 		case KEEP_LOOPING:

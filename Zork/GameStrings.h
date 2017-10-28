@@ -25,18 +25,18 @@ will kill you faster than the poison."
 #define RIDDLE_3_RESPONSES "1. Forgiveness, 2. Kindness, 3. Beauty"
 
 #define END_DIALOGUE "So much better! I can finally get rid of these damned things!! \
-... ahhh so much time, so many things to do, and many paybacks i have\
-to check from my list, heheheh ... Huh? You are still alive? Well, I'm\
-on a great mood, so here's your precious antidote, I'm out of here before\
-my mood shifts and I set fire to this house and everything inside it.\
+... ahhh so much time, so many things to do, and many paybacks i have \
+to check from my list, heheheh ... Huh? You are still alive? Well, I'm \
+on a great mood, so here's your precious antidote, I'm out of here before \
+my mood shifts and I set fire to this house and everything inside it. \
 Toodles!... Oh and don't you dare to meet me again in the future."
 
-#define HALF_TIME_REMAINING "You feel weaker, a burning sensation in your chest confirms\
+#define HALF_TIME_REMAINING "You feel weaker, a burning sensation in your chest confirms \
 that the poison is spreading further through your body"
 
 #define TIMEUP_DEATH "The posion reached your vital organs... your body convulses... you fall to the ground. You died."
 
-#define FRONT_HOUSE "You find yourself before the Alchemist House, there's a little path surrounding the house.\
+#define FRONT_HOUSE "You find yourself before the Alchemist House, there's a little path surrounding the house. \
 You can follow the path to the EAST or the WEST."
 
 #define EAST_HOUSE "This is the right side of the house. The path continues NORTH and SOUTH."
@@ -45,14 +45,14 @@ You can follow the path to the EAST or the WEST."
 
 #define BACK_HOUSE "You're now in the back of the house. You can follow the path to the EAST or the WEST."
 
-#define HOUSE_ENTRANCE "You're in the entrance of the house, a pretty modest room with some furniture.\
+#define HOUSE_ENTRANCE "You're in the entrance of the house, a pretty modest room with some furniture. \
 There's a door to the WEST and the EAST."
 
-#define ROOM2 "This part of the house looks like a living room. Before entering the room was dark but the very same moment\
-you set foot inside the fireplace lit up by itself providing the much needed light to be able to see.\
+#define ROOM2 "This part of the house looks like a living room. Before entering the room was dark but the very same moment \
+you set foot inside the fireplace lit up by itself providing the much needed light to be able to see. \
 There's a door NORTH and one at the WEST."
 
-#define ROOM3 "The room you walked in is quite strange. It's carpet is blue, the walls are blue and the celing is blue.\
+#define ROOM3 "The room you walked in is quite strange. It's carpet is blue, the walls are blue and the celing is blue. \
 Inside there are several items and the only exit is at SOUTH."
 
 #define ROOM4 "The room is very likely to be the kitchen of the house. The exits are at NORTH and EAST."
@@ -65,7 +65,7 @@ Inside there are several items and the only exit is at SOUTH."
 
 #define ROOM8 "The room you find yourself in is barely illuminated, the walls at your left and your right are filled \
 with shelves, each row filled with lots of bottles of different shapes and sizes, each one housing \
-substances of different colors and other nefarious contents. At the back of the room there seems to be\
+substances of different colors and other nefarious contents. At the back of the room there seems to be \
 a figure shackled to the wall."
 
 #define ENTRANCE_KEY_DESC "It's a small metallic key"
@@ -110,5 +110,10 @@ a figure shackled to the wall."
 
 #define ROOM8_LOCK "A strange lock, there's no keyhole but there's a bell engraved in it."
 
-#define NOTE "The note reads: You should've paid attention to the signs of warning in the forest leading to this house.\
+#define NOTE "The note reads: You should've paid attention to the signs of warning in the forest leading to this house. \
 The door pommel is poisoned, absorbed through your skin, you have twenty minutes of life. You shouldn't have come here."
+
+#define GAME_INTRO "A simple task, really. After hearing that the alchemist that lived in the forest has not been seen for \
+months, you decide that he would not miss a few valuable items from his home. Naturally the old man didn't like visits and \
+plagued the path through the forest that led to his house with warning signs upon warning signs, but that does not deter you, \
+after all he's been out for quite a long time, and you'll be done quickly. After what felt hours you arrived to his home."

@@ -38,6 +38,8 @@ public:
 	void openRoom(Item* key);
 	void const win();
 	int const checkState();
+	clock_t const checkTime();
+	bool const hasPlayerEnteredHouse();
 
 	void const LookTarget(std::string name);
 	void MoveToDirection(std::string direction);
@@ -50,10 +52,10 @@ public:
 	void Talk(std::string target);
 	void const Time();
 
-	clock_t const checkTime();
-	//void processItemUsage();
+
 private:
 	bool winGame;
+	bool enteredHouse;
 	clock_t GameTime;
 	int state, playerState;
 };
