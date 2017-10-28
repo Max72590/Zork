@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __Entity__
+#define __Entity__
 
 #include <string>
 
@@ -15,3 +16,4 @@ public:
 	std::string entityDescription;
 };
 
+#endif //__Entity__

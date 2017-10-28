@@ -1,4 +1,6 @@
-#pragma once
+#ifndef __GameWorld__
+#define __GameWorld__
+
 #include"Entity.h"
 #include "Globals.h"
 
@@ -60,3 +62,4 @@ private:
 	int state, playerState;
 };
 
+#endif // __GameWorld__

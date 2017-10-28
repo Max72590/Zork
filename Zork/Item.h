@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __Item__
+#define __Item__
 #include "Entity.h"
 #include <string>
 
@@ -20,3 +21,4 @@ public:
 
 };
 
+#endif // __Item__

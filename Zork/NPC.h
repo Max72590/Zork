@@ -1,4 +1,6 @@
-#pragma once
+#ifndef __NPC__
+#define __NPC__
+
 #include "Entity.h"
 #include <vector>
 #include <string>
@@ -29,3 +31,4 @@ private:
 
 };
 
+#endif // __NPC__

@@ -1,4 +1,8 @@
-#pragma once
+#ifndef  __Globals__
+#define __Globals__
+
+
+
 #include <time.h>
 #include <iostream>
 #include <string>
@@ -16,3 +20,4 @@
 #define KEEP_LOOPING 0
 #define TOTAL_GAME_TIME 1200
 
+#endif //  __Globals__

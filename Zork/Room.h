@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __Room__
+#define __Room__
 #include "Entity.h"
 #include <list>
 #include <string>
@@ -30,4 +31,4 @@ public:
 	Item* lockedBy;
 	
 };
-
+#endif // __Room__

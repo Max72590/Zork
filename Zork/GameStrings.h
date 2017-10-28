@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __GameStrings__
+#define __GameStrings__
 
 #define NPC_DESCRIPTION "It looks like a man dressed up in rags, covering the body almost completely, but nothing else can be seen apart from the cloth."
 
@@ -117,3 +118,5 @@ The door pommel is poisoned, absorbed through your skin, you have twenty minutes
 months, you decide that he would not miss a few valuable items from his home. Naturally the old man didn't like visits and \
 plagued the path through the forest that led to his house with warning signs upon warning signs, but that does not deter you, \
 after all he's been out for quite a long time, and you'll be done quickly. After what felt hours you arrived to his home."
+
+#endif // __GameStrings__

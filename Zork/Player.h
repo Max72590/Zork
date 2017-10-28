@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __Player__
+#define __Player__
 #include "Entity.h"
 #include "Item.h"
 #include "Globals.h"
@@ -27,3 +28,4 @@ public:
 	int health;
 };
 
+#endif //__Player__
