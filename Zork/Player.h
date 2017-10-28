@@ -1,7 +1,7 @@
 #pragma once
 #include "Entity.h"
 #include "Item.h"
-#include <list>
+#include "Globals.h"
 
 class Room;
 
@@ -16,13 +16,13 @@ public:
 
 	void addItem( Item* item);
 	void removeItem( Item* item);
-	 Item* fetchItem(std::string target);
+	 Item* const fetchItem(std::string target);
 	 int playerUpdateHealth(int damage);
-	 bool isPlayerDead();
-	 Room* getRoom();
+	 bool const isPlayerDead();
+	 Room* const getRoom();
 
 public:
-	std::list<Item*> inventory;
+	std::map<std::string, Item*> inventory;
 	Room *actualRoom;
 	int health;
 };

@@ -64,20 +64,20 @@ void GameWorld::initGameWorld() {
 	vector<Room*> r(rooms, rooms +sizeof(rooms) / sizeof(rooms[0]));
 	addRooms(r);
 
-	frontHouse->listOfItems.push_back(entranceLock);
-	backHouse->listOfItems.push_back(entranceKey);
-	entrance->listOfItems.push_back(jug);
-	entrance->listOfItems.push_back(note);
-	Room2->listOfItems.push_back(fireplace);
-	Room2->listOfItems.push_back(closedWindow);
-	Room2->listOfItems.push_back(room3Lock);
-	Room3->listOfItems.push_back(waxFigure);
-	Room3->listOfItems.push_back(bell);
-	Room4->listOfItems.push_back(stove);
-	Room4->listOfItems.push_back(lockedfaucet);
-	Room4->listOfItems.push_back(room5Lock);
-	Room5->listOfItems.push_back(bellBox);
-	Room7->listOfItems.push_back(room8Lock);
+	frontHouse->addItem(entranceLock);
+	backHouse->addItem(entranceKey);
+	entrance->addItem(jug);
+	entrance->addItem(note);
+	Room2->addItem(fireplace);
+	Room2->addItem(closedWindow);
+	Room2->addItem(room3Lock);
+	Room3->addItem(waxFigure);
+	Room3->addItem(bell);
+	Room4->addItem(stove);
+	Room4->addItem(lockedfaucet);
+	Room4->addItem(room5Lock);
+	Room5->addItem(bellBox);
+	Room7->addItem(room8Lock);
 	
 	replacements[closedWindow->entityName] = openedWindow;
 	replacements[fireplace->entityName] = fireplaceOff;
@@ -104,8 +104,8 @@ void GameWorld::initGameWorld() {
 
 	player->actualRoom = frontHouse;
 	//player->actualRoom = Room4;
-	player->inventory.push_back(entranceKey);
-	player->inventory.push_back(room5Key);
+	//player->addItem(entranceKey);
+	//player->addItem(room5Key);
 	cout<<player->actualRoom->entityDescription << endl;
 	cout << endl;
 	cout << endl;
@@ -270,8 +270,8 @@ void GameWorld::MoveToDirection(string direction) {
 		if (targetRoom->lockedBy == nullptr) {
 			player->actualRoom = targetRoom;
 			cout << targetRoom->entityDescription << endl;
-			for (list<Item*>::iterator it = targetRoom->listOfItems.begin(); it != targetRoom->listOfItems.end(); ++it) {
-				cout << "There's an item: " << (*it)->entityName << endl;
+			for (map<string,Item*>::iterator it = targetRoom->listOfItems.begin(); it != targetRoom->listOfItems.end(); ++it) {
+				cout << "There's an item: " << it->second->entityName << endl;
 			}
 		}
 		else cout << "The entrance to the room in the "<< direction <<" direction is locked." << endl;
@@ -283,7 +283,7 @@ void GameWorld::MoveToDirection(string direction) {
 
 void GameWorld::LookTarget(string name) {
 	if (DEBUG_MODE) cout << "Looking at: " + name << endl;
-	list<Item*> *roomItems = &player->actualRoom->listOfItems;
+	map<string,Item*> *roomItems = &player->actualRoom->listOfItems;
 	bool found = false;
 	if (name == "me" || name == "myself") {
 		cout << player->entityDescription << endl;
@@ -291,8 +291,8 @@ void GameWorld::LookTarget(string name) {
 	}
 	else if (name == "this room") {
 		cout << player->actualRoom->entityDescription << endl;
-		for (list<Item*>::iterator it = player->actualRoom->listOfItems.begin(); it != player->actualRoom->listOfItems.end(); ++it) {
-			cout << "There's the item: " << (*it)->entityName << endl;
+		for (map<string, Item*>::iterator it = player->actualRoom->listOfItems.begin(); it != player->actualRoom->listOfItems.end(); ++it) {
+			cout << "There's the item: " << it->second->entityName << endl;
 		}
 		for (map<string, NPC*>::iterator it = player->getRoom()->listOfRoomNPCs.begin(); it != player->getRoom()->listOfRoomNPCs.end(); ++it) {
 			cout << "There's someone: " << (*it).second->entityName << endl;
@@ -304,7 +304,7 @@ void GameWorld::LookTarget(string name) {
 		found = true;
 		if (!(*roomItems).empty()) {
 			cout << "You see several things in the room:" << endl;
-			for (list<Item*>::iterator it = (*roomItems).begin(); it != (*roomItems).end(); ++it) cout << "There's " << (*it)->entityDescription << endl;
+			for (map<string, Item*>::iterator it = (*roomItems).begin(); it != (*roomItems).end(); ++it) cout << "There's " << it->second->entityDescription << endl;
 		}
 	}
 	else if (!found) {
@@ -314,9 +314,9 @@ void GameWorld::LookTarget(string name) {
 			found = true;
 		}
 		if (!(*roomItems).empty() && !found) {
-			for (list<Item*>::iterator it = (*roomItems).begin(); it != (*roomItems).end() && !found; ++it) {
-				if ((*it)->entityName == name) {
-					cout << (*it)->entityDescription << endl;
+			for (map<string, Item*>::iterator it = (*roomItems).begin(); it != (*roomItems).end(); ++it) {
+				if (it->second->entityName == name) {
+					cout << it->second->entityDescription << endl;
 					found = true;
 				}
 			}
@@ -354,7 +354,7 @@ void GameWorld::UseItemWith(string target1, std::string target2) {
 				if (combinationItem->entityName == toBeCombined->combinedWith->entityName){
 					if (combinationItem->isKey) {
 						openRoom(combinationItem);
-						player->actualRoom->listOfItems.remove(toBeCombined);
+						player->actualRoom->listOfItems.erase(toBeCombined->entityName);
 					}
 					else {
 						map<string, Item*>::iterator it = replacements.find(toBeCombined->entityName);
@@ -367,8 +367,8 @@ void GameWorld::UseItemWith(string target1, std::string target2) {
 							}
 							else {
 								cout << "You successfully combined " << combinationItem->entityName << " with " << toBeCombined->entityName<<endl;
-								player->actualRoom->listOfItems.remove(toBeCombined);
-								player->actualRoom->listOfItems.push_back((*it).second);
+								player->actualRoom->listOfItems.erase(toBeCombined->entityName);
+								player->actualRoom->addItem((*it).second);
 								cout << "And " << toBeCombined->entityName << " becomes " << (*it).second->entityName <<endl;
 							}
 						}
@@ -428,8 +428,8 @@ void GameWorld::Open(string target) {
 				if (itemOfList->entityName == "Closed_window") {
 					map<string, Item*>::iterator it = replacements.find(itemOfList->entityName);
 					if (it != replacements.end()) {
-						player->actualRoom->listOfItems.remove(itemOfList);
-						player->actualRoom->listOfItems.push_back((*it).second);
+						player->actualRoom->listOfItems.erase(itemOfList->entityName);
+						player->actualRoom->addItem((*it).second);
 						replacements.erase(itemOfList->entityName);
 					}
 				}
@@ -454,7 +454,7 @@ void GameWorld::Take(string target) {
 		}
 	}
 	if (!found) cout << "The item " << target << " is not here to be picked up!" << endl;
-	else  player->actualRoom->listOfItems.remove(roomItem);
+	else  player->actualRoom->listOfItems.erase(roomItem->entityName);
 }
 
 void GameWorld::Drop(string target) {
@@ -465,12 +465,12 @@ void GameWorld::Drop(string target) {
 		if (iter != nullptr) {
 			if (iter->entityName == target) {
 				found = true;
-				player->actualRoom->listOfItems.push_back(iter);
+				player->actualRoom->addItem(iter);
 				cout << "You drop " << target << " from your inventory into the room." << endl;
 			}
 		}
 		if (!found) cout << "The item " << target << " is not in your inventory!" << endl;
-		else player->inventory.remove(iter);
+		else player->removeItem(iter);
 	}
 	else cout << "Your inventory is empty." << endl;
 }
@@ -508,9 +508,9 @@ void GameWorld::Combine(string target1, string target2) {
 }
 
 void GameWorld::CheckInventory() {
-	list<Item*> inventory = player->inventory;
-	for (list<Item*>::iterator it = inventory.begin(); it != inventory.end(); ++it) {
-		cout << (*it)->entityName << endl;
+	map<string, Item*>::iterator inventoryIt;
+	for (inventoryIt = player->inventory.begin(); inventoryIt != player->inventory.end(); ++inventoryIt) {
+		cout << inventoryIt->second->entityName << endl;
 	}
 }
 

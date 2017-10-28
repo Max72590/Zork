@@ -15,19 +15,18 @@ Player::~Player()
 }
 
 void Player::addItem( Item* item) {
-	inventory.push_back(item);
+	inventory[item->entityName] =item;
 }
 
 void Player::removeItem( Item* item) {
-	inventory.remove(item);
+	inventory.erase(item->entityName);
 }
 
- Item* Player::fetchItem(string target) {
-	Item* item;
-	for (list<Item*>::iterator it = inventory.begin(); it != inventory.end(); ++it) {
-		item = *it;
-		if (item->entityName == target ) {
-			return item;
+ Item* const Player::fetchItem(string target) {
+	 map<string, Item*>::iterator item = inventory.find(target);
+	if (item != inventory.end()){
+		if (item->second->entityName == target ) {
+			return item->second;
 		}
 	}
 	return nullptr;
@@ -38,10 +37,10 @@ void Player::removeItem( Item* item) {
 	 return health;
  }
 
- bool Player::isPlayerDead() {
+ bool const Player::isPlayerDead() {
 	 return health <= 0;
  }
 
- Room* Player::getRoom() {
+ Room* const Player::getRoom() {
 	 return actualRoom;
  }

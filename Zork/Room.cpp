@@ -20,7 +20,7 @@ Room::~Room()
 
 
 
-string Room::getExit(int index) {
+string const Room::getExit(int index) {
 	return listOfExits[index];
 }
 
@@ -33,18 +33,15 @@ void Room::unlock( Item* key) {
 		lockedBy = nullptr;
 }
 
-Item* Room::fetchItemFromRoom(std::string target) {
-	 Item* item;
-	for (list< Item*>::iterator it = listOfItems.begin(); it != listOfItems.end(); ++it) {
-		item = *it;
-		if (item->entityName == target) {
-			return item;
-		}
+Item* const Room::fetchItemFromRoom(string target) {
+	map<string, Item*>::iterator itemIt = listOfItems.find(target);
+	if (itemIt != listOfItems.end()){
+			return itemIt->second;
 	}
 	return nullptr;
 }
 
-NPC* Room::fetchNPCFromRoom(std::string name) {
+NPC* const Room::fetchNPCFromRoom(std::string name) {
 	map<string, NPC*>::iterator it = listOfRoomNPCs.find(name);
 	if (it != listOfRoomNPCs.end()) return (*it).second;
 	else return nullptr;
@@ -52,4 +49,8 @@ NPC* Room::fetchNPCFromRoom(std::string name) {
 
 void Room::addNPC(NPC* npc) {
 	listOfRoomNPCs[(*npc).entityName] = npc;
+}
+
+void Room::addItem(Item* item) {
+	listOfItems[item->entityName] = item;
 }

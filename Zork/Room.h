@@ -15,15 +15,16 @@ public:
 	~Room();
 	Room(std::string name, std::string description, Item* lock);
 
-	std::string getExit(int index);
+	std::string const getExit(int index);
 	void setExits(std::string const (&exits)[6]);
 	void unlock( Item* key);
-	Item* fetchItemFromRoom(std::string target);
-	NPC* fetchNPCFromRoom(std::string name);
+	Item* const fetchItemFromRoom(std::string target);
+	NPC* const fetchNPCFromRoom(std::string name);
 	void addNPC(NPC* npc);
+	void addItem(Item* item);
 
 public:
-	std::list< Item*> listOfItems;
+	std::map<std::string, Item*> listOfItems;
 	std::vector<std::string> listOfExits = std::vector<std::string>(6,"");
 	std::map<std::string, NPC*> listOfRoomNPCs;
 	Item* lockedBy;
