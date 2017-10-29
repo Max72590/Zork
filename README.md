@@ -48,7 +48,9 @@ The available commands are:
   
 ## Guide / Walkthough :
 
-Go WEST or EAST, then NORTH and take _House_key_ 
+*Note: do not write "Go" to move towards a direction, you simply write "NORTH" or the direction you wish to move. 
+
+Go WEST or EAST, then NORTH and take _House_key_  
 
 Go WEST or EAST and then SOUTH 
 
@@ -74,7 +76,7 @@ Go NORTH, TAKE _Bell_ and TAKE _Wax_Figure_
 
 Go SOUTH, WEST and WEST again, USE _Wax_figure_ with _Stove_ and USE _Green_key_ with _Green_lock_ and go NORTH
 
-OPEN _Metal_box_ (or TAKE and OPEN _Metal_box_ ) and COMBINE _Bell_clapper_ with _Bell_
+OPEN _Metal_box_ (or TAKE and OPEN _Metal_box_ ) and COMBINE _Bell-clapper_ with _Bell_
 
 Go EAST and UP
 
